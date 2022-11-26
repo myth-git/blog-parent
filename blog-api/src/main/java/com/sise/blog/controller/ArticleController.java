@@ -24,7 +24,7 @@ public class ArticleController {
     //Result是统一结果返回
     @PostMapping
     public Result articles(@RequestBody PageParams pageParams){
-
+        //int i = 10/0;
         return articleService.listArticlesPage(pageParams);
     }
 
