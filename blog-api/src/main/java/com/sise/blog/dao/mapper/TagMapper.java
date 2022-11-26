@@ -13,4 +13,13 @@ public interface TagMapper extends BaseMapper<Tag> {
      */
     List<Tag> findTagsByArticleId(Long articleId);
 
+    /**
+     * 查找最热标签前6个
+     * @param limit
+     * @return
+     */
+    List<Long> findHostTagIds(int limit);
+
+    List<Tag> findTagsTagIds(List<Long> tagIds);
+
 }
