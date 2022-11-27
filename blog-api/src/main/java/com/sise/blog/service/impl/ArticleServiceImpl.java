@@ -53,7 +53,19 @@ public class ArticleServiceImpl implements ArticleService {
         queryWrapper.last("limit " + limit);
         //select id,title from article order by view_counts desc limit 5
         List<Article> articles = articleMapper.selectList(queryWrapper);
-        return Result.success(copyList(articles,false,false));
+        return Result.success(copyList(articles, false, false));
+    }
+
+    @Override
+    public Result newArticles(int limit) {
+        LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.orderByDesc(Article::getCreateDate);
+        queryWrapper.select(Article::getId, Article::getTitle);
+        //limit这里要加一个空格
+        queryWrapper.last("limit " + limit);
+        //select id,title from article order by createDate desc limit 5
+        List<Article> articles = articleMapper.selectList(queryWrapper);
+        return Result.success(copyList(articles, false, false));
     }
 
     private List<ArticleVo> copyList(List<Article> records, boolean isTag, boolean isAuthor) {
