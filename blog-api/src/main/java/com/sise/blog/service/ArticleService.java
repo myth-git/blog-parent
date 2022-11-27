@@ -14,4 +14,10 @@ public interface ArticleService {
     Result hotArticle(int limit);
 
     Result newArticles(int limit);
+
+    /**
+     * 文章归档
+     * @return
+     */
+    Result listArchives();
 }

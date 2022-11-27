@@ -2,6 +2,7 @@ package com.sise.blog.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.sise.blog.dao.dos.Archives;
 import com.sise.blog.dao.mapper.ArticleMapper;
 import com.sise.blog.dao.pojo.Article;
 import com.sise.blog.service.ArticleService;
@@ -66,6 +67,12 @@ public class ArticleServiceImpl implements ArticleService {
         //select id,title from article order by createDate desc limit 5
         List<Article> articles = articleMapper.selectList(queryWrapper);
         return Result.success(copyList(articles, false, false));
+    }
+
+    @Override
+    public Result listArchives() {
+        List<Archives> archivesList = articleMapper.listArchives();
+        return Result.success(archivesList);
     }
 
     private List<ArticleVo> copyList(List<Article> records, boolean isTag, boolean isAuthor) {
