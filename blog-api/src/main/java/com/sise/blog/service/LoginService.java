@@ -1,5 +1,6 @@
 package com.sise.blog.service;
 
+import com.sise.blog.dao.pojo.SysUser;
 import com.sise.blog.vo.Result;
 import com.sise.blog.vo.params.LoginParams;
 
@@ -10,4 +11,11 @@ public interface LoginService {
      * @return
      */
     Result login(LoginParams loginParams);
+
+    /**
+     * 校验token的合法性
+     * @param token
+     * @return
+     */
+    SysUser checkToken(String token);
 }

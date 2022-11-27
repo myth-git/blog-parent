@@ -9,11 +9,13 @@ import com.sise.blog.utils.JWTUtils;
 import com.sise.blog.vo.ErrorCode;
 import com.sise.blog.vo.Result;
 import com.sise.blog.vo.params.LoginParams;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -50,5 +52,26 @@ public class LoginServiceImpl implements LoginService {
         String token = JWTUtils.createToken(sysUser.getId());
         redisTemplate.opsForValue().set("TOKEN_" + token, JSON.toJSONString(sysUser), 1, TimeUnit.DAYS);
         return Result.success(token);
+    }
+
+    @Override
+    public SysUser checkToken(String token) {
+        //判断token是否为空
+        if (StringUtils.isBlank(token)) {
+            return null;
+        }
+        Map<String, Object> stringObjectMap = JWTUtils.checkToken(token);
+        //判断token解析是否成功
+        if (stringObjectMap == null) {
+            return null;
+        }
+        //判断redis的token是否为空
+        String userJson = redisTemplate.opsForValue().get("TOKEN_" + token);
+        if (StringUtils.isBlank(userJson)){
+            return null;
+        }
+        //将json数据解析为对象
+        SysUser sysUser = JSON.parseObject(userJson, SysUser.class);
+        return sysUser;
     }
 }
