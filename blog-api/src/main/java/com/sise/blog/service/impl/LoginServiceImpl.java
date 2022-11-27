@@ -67,11 +67,18 @@ public class LoginServiceImpl implements LoginService {
         }
         //判断redis的token是否为空
         String userJson = redisTemplate.opsForValue().get("TOKEN_" + token);
-        if (StringUtils.isBlank(userJson)){
+        if (StringUtils.isBlank(userJson)) {
             return null;
         }
         //将json数据解析为对象
         SysUser sysUser = JSON.parseObject(userJson, SysUser.class);
         return sysUser;
+    }
+
+    @Override
+    public Result logout(String token) {
+        //删除掉redis中的token
+        redisTemplate.delete(token);
+        return Result.success(null);
     }
 }
