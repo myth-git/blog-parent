@@ -9,16 +9,17 @@ import com.sise.blog.utils.JWTUtils;
 import com.sise.blog.vo.ErrorCode;
 import com.sise.blog.vo.Result;
 import com.sise.blog.vo.params.LoginParams;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Service
+@Transactional //事务回滚
 public class LoginServiceImpl implements LoginService {
 
     private static final String slat = "mszlu!@#";
@@ -80,5 +81,47 @@ public class LoginServiceImpl implements LoginService {
         //删除掉redis中的token
         redisTemplate.delete(token);
         return Result.success(null);
+    }
+
+    @Override
+    public Result register(LoginParams params) {
+        /**
+         * 1、判断参数合法性
+         * 2、查询数据库是否有该用户
+         * 3、有的报错
+         * 4、没有的话注册成功
+         * 5、注册成功后返回一个token
+         * 6、将token保存到redis中
+         * 7、注意 加上事务，一旦中间的任务过程出现问题，注册用户 需要回滚
+         */
+        String account = params.getAccount();
+        String nickname = params.getNickname();
+        String password = params.getPassword();
+        if (StringUtils.isBlank(account)
+                || StringUtils.isBlank(nickname)
+                || StringUtils.isBlank(password)
+        ) {
+            return Result.fail(ErrorCode.ACCOUNT_EXIST.getCode(), "用户名或昵称或密码不能为空");
+        }
+        SysUser sysUser = sysUserService.findAccount(account);
+        if (sysUser != null) {
+            return Result.fail(ErrorCode.ACCOUNT_EXIST.getCode(), ErrorCode.ACCOUNT_EXIST.getMsg());
+        }
+        sysUser = new SysUser();
+        sysUser.setNickname(nickname);
+        sysUser.setAccount(account);
+        sysUser.setPassword(DigestUtils.md5Hex(password + slat));
+        sysUser.setCreateDate(System.currentTimeMillis());
+        sysUser.setLastLogin(System.currentTimeMillis());
+        sysUser.setAvatar("/static/img/logo.b3a48c0.png");
+        sysUser.setAdmin(1);//1 为true
+        sysUser.setDeleted(0);// 0 为false
+        sysUser.setSalt("");
+        sysUser.setStatus("");
+        sysUser.setEmail("");
+        sysUserService.save(sysUser);
+        String token = JWTUtils.createToken(sysUser.getId());
+        redisTemplate.opsForValue().set("TOKEN_"+token,JSON.toJSONString(sysUser),1,TimeUnit.DAYS);
+        return Result.success(token);
     }
 }

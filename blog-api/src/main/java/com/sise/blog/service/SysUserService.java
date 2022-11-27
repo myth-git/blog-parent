@@ -15,4 +15,17 @@ public interface SysUserService {
      * @return
      */
     Result findUserByToken(String token);
+
+    /**
+     * 查找是否有相同的用户名
+     * @param account
+     * @return
+     */
+    SysUser findAccount(String account);
+
+    /**
+     * 保存用户
+     * @param sysUser
+     */
+    void save(SysUser sysUser);
 }
