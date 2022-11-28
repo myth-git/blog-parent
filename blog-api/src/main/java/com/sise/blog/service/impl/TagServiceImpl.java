@@ -1,5 +1,6 @@
 package com.sise.blog.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.sise.blog.dao.mapper.TagMapper;
 import com.sise.blog.dao.pojo.Tag;
 import com.sise.blog.service.TagService;
@@ -44,6 +45,12 @@ public class TagServiceImpl implements TagService {
         * */
         List<Tag> tagList = tagMapper.findTagsTagIds(tagIds);
         return Result.success(tagList);
+    }
+
+    @Override
+    public Result findAll() {
+        List<Tag> tags = tagMapper.selectList(new LambdaQueryWrapper<>());
+        return Result.success(copyList(tags));
     }
 
 

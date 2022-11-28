@@ -10,4 +10,10 @@ public interface TagService {
     List<TagVo> findTagsByArticleId(Long articleId);
 
     Result hots(int limit);
+
+    /**
+     * 写文章--查询所有标签
+     * @return
+     */
+    Result findAll();
 }
