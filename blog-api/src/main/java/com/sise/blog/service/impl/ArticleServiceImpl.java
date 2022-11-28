@@ -7,10 +7,7 @@ import com.sise.blog.dao.mapper.ArticleBodyMapper;
 import com.sise.blog.dao.mapper.ArticleMapper;
 import com.sise.blog.dao.pojo.Article;
 import com.sise.blog.dao.pojo.ArticleBody;
-import com.sise.blog.service.ArticleService;
-import com.sise.blog.service.CategoryService;
-import com.sise.blog.service.SysUserService;
-import com.sise.blog.service.TagService;
+import com.sise.blog.service.*;
 import com.sise.blog.vo.ArticleBodyVo;
 import com.sise.blog.vo.ArticleVo;
 import com.sise.blog.vo.Result;
@@ -34,6 +31,8 @@ public class ArticleServiceImpl implements ArticleService {
     private SysUserService sysUserService;
     @Autowired
     private CategoryService categoryService;
+    @Autowired
+    private ThreadService threadService;
 
     @Override
     public Result listArticlesPage(PageParams pageParams) {
@@ -89,6 +88,13 @@ public class ArticleServiceImpl implements ArticleService {
          */
         Article article = articleMapper.selectById(articleId);
         ArticleVo articleVo = copy(article, true, true, true, true);
+        /**
+         * 查看完文章了，新增阅读数，有没有问题呢？
+         * 查看完文章之后，本应该直接返回数据了，这个时候做了一个更新操作，更新时写锁，阻塞其他的读操作，性能就会比较低
+         * 更新 增加此次接口的 耗时 如果一旦更新出问题，不能影响 查看文章操作
+         * 线程池 可以把更新操作 扔到线程池中执行和主线程不相关了
+         */
+        threadService.updateArticleViewCount(articleMapper, article);
         return Result.success(articleVo);
     }
 
