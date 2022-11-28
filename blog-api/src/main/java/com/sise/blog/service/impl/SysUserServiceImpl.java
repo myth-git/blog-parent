@@ -8,6 +8,8 @@ import com.sise.blog.service.SysUserService;
 import com.sise.blog.vo.ErrorCode;
 import com.sise.blog.vo.LoginUserVo;
 import com.sise.blog.vo.Result;
+import com.sise.blog.vo.UserVo;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,20 @@ public class SysUserServiceImpl implements SysUserService {
     private SysUserMapper sysUserMapper;
     @Autowired
     private LoginService loginService;
+
+    @Override
+    public UserVo findUserVoById(Long id) {
+        SysUser sysUser = sysUserMapper.selectById(id);
+        if (sysUser == null) {
+            sysUser = new SysUser();
+            sysUser.setId(1L);
+            sysUser.setAvatar("/static/img/logo.b3a48c0.png");
+            sysUser.setNickname("myth");
+        }
+        UserVo userVo = new UserVo();
+        BeanUtils.copyProperties(sysUser, userVo);
+        return userVo;
+    }
 
     @Override
     public SysUser findUserById(Long id) {
@@ -69,10 +85,10 @@ public class SysUserServiceImpl implements SysUserService {
     @Override
     public void save(SysUser sysUser) {
         /*
-        * 保存用户 id会自动生成的
-        * 这个地方 默认生成的id是 分布式id 雪花算法
-        *
-        * */
+         * 保存用户 id会自动生成的
+         * 这个地方 默认生成的id是 分布式id 雪花算法
+         *
+         * */
         sysUserMapper.insert(sysUser);
     }
 }
