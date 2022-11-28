@@ -1,6 +1,7 @@
 package com.sise.blog.service;
 
 import com.sise.blog.vo.Result;
+import com.sise.blog.vo.params.ArticleParam;
 import com.sise.blog.vo.params.PageParams;
 
 public interface ArticleService {
@@ -27,4 +28,11 @@ public interface ArticleService {
      * @return
      */
     Result findArticleById(Long articleId);
+
+    /**
+     * 发布文章
+     * @param articleParam
+     * @return
+     */
+    Result publish(ArticleParam articleParam);
 }

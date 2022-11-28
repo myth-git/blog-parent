@@ -5,12 +5,18 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sise.blog.dao.dos.Archives;
 import com.sise.blog.dao.mapper.ArticleBodyMapper;
 import com.sise.blog.dao.mapper.ArticleMapper;
+import com.sise.blog.dao.mapper.ArticleTagMapper;
 import com.sise.blog.dao.pojo.Article;
 import com.sise.blog.dao.pojo.ArticleBody;
+import com.sise.blog.dao.pojo.ArticleTag;
+import com.sise.blog.dao.pojo.SysUser;
 import com.sise.blog.service.*;
+import com.sise.blog.utils.UserThreadLocal;
 import com.sise.blog.vo.ArticleBodyVo;
 import com.sise.blog.vo.ArticleVo;
 import com.sise.blog.vo.Result;
+import com.sise.blog.vo.TagVo;
+import com.sise.blog.vo.params.ArticleParam;
 import com.sise.blog.vo.params.PageParams;
 import org.joda.time.DateTime;
 import org.springframework.beans.BeanUtils;
@@ -18,7 +24,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class ArticleServiceImpl implements ArticleService {
@@ -33,6 +42,8 @@ public class ArticleServiceImpl implements ArticleService {
     private CategoryService categoryService;
     @Autowired
     private ThreadService threadService;
+    @Autowired
+    private ArticleTagMapper articleTagMapper;
 
     @Override
     public Result listArticlesPage(PageParams pageParams) {
@@ -96,6 +107,52 @@ public class ArticleServiceImpl implements ArticleService {
          */
         threadService.updateArticleViewCount(articleMapper, article);
         return Result.success(articleVo);
+    }
+
+    @Override
+    public Result publish(ArticleParam articleParam) {
+        //此接口   要加入到登录拦截当中
+        SysUser sysUser = UserThreadLocal.get();
+        /**
+         * 1、发布文章 目的 构建Article 对象
+         * 2、作者id 当前登录用户
+         * 3、标签 要将标签  加入到 关联表当中
+         * 4、body   内容存储 article bodyId
+         */
+        Article article = new Article();
+        article.setAuthorId(sysUser.getId());
+        article.setWeight(Article.Article_Common);
+        article.setViewCounts(0);
+        article.setTitle(articleParam.getTitle());
+        article.setSummary(articleParam.getSummary());
+        article.setCommentCounts(0);
+        article.setCreateDate(System.currentTimeMillis());
+        article.setCategoryId(articleParam.getCategory().getId());
+        //插入之后，会生成一个文章id
+        articleMapper.insert(article);
+        //tag
+        List<TagVo> tags = articleParam.getTags();
+        if (tags != null){
+            for (TagVo tag : tags) {
+                Long articleId = article.getId();
+                ArticleTag articleTag = new ArticleTag();
+                articleTag.setTagId(tag.getId());
+                articleTag.setArticleId(articleId);
+                articleTagMapper.insert(articleTag);
+            }
+        }
+        //body
+        ArticleBody articleBody = new ArticleBody();
+        articleBody.setArticleId(article.getId());
+        articleBody.setContent(articleParam.getBody().getContent());
+        articleBody.setContentHtml(articleParam.getBody().getContentHtml());
+        articleBodyMapper.insert(articleBody);
+
+        article.setBodyId(articleBody.getId());
+        articleMapper.updateById(article);
+        Map<String,String> map = new HashMap<>();
+        map.put("id",article.getId().toString());
+        return Result.success(map);
     }
 
     private List<ArticleVo> copyList(List<Article> records, boolean isTag, boolean isAuthor) {

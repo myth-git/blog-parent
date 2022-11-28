@@ -2,6 +2,7 @@ package com.sise.blog.controller;
 
 import com.sise.blog.service.ArticleService;
 import com.sise.blog.vo.Result;
+import com.sise.blog.vo.params.ArticleParam;
 import com.sise.blog.vo.params.PageParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -64,6 +65,14 @@ public class ArticleController {
     public Result findArticleById(@PathVariable("id") Long articleId){
         return articleService.findArticleById(articleId);
     }
+    /**
+     * 发布文章
+     */
+    @PostMapping("publish")
+    public Result  publish(@RequestBody ArticleParam articleParam){
+        return articleService.publish(articleParam);
+    }
+
 
 
 }
