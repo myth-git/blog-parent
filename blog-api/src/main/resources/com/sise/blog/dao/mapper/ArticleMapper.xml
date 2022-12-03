@@ -5,11 +5,18 @@
 <mapper namespace="com.sise.blog.dao.mapper.ArticleMapper">
 
     <select id="listArchives" resultType="com.sise.blog.dao.dos.Archives">
-        select year(create_date) as year,
+/*使用data形式的sql*/
+/*        select year(create_date) as year,
                month(create_date) as month,
                count(*) as count
         from
                 blog_article
+        group by year,month*/
+        /*由于发布文章传入的是毫秒，需要改成这种形式来防止null值*/
+        select FROM_UNIXTIME(create_date/1000,'%Y') as year,
+                FROM_UNIXTIME(create_date/1000,'%m') as month,
+                count(*) as count
+        from blog_article
         group by year,month
     </select>
 </mapper>
