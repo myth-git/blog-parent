@@ -18,4 +18,9 @@ public class CategoryController {
     public Result categorys(){
         return categoryService.findAll();
     }
+
+    @GetMapping("detail")
+    public Result categorysDetail(){
+        return categoryService.findAllDetail();
+    }
 }
