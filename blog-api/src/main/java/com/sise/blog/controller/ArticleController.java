@@ -1,5 +1,6 @@
 package com.sise.blog.controller;
 
+import com.sise.blog.common.aop.LogAnnotation;
 import com.sise.blog.service.ArticleService;
 import com.sise.blog.vo.Result;
 import com.sise.blog.vo.params.ArticleParam;
@@ -22,6 +23,8 @@ public class ArticleController {
      */
     //Result是统一结果返回
     @PostMapping
+    //加上此注解 代表要对此接口记录日志
+    @LogAnnotation(module="文章",operator="获取文章列表")
     public Result articles(@RequestBody PageParams pageParams){
         //int i = 10/0;
         return articleService.listArticlesPage(pageParams);
