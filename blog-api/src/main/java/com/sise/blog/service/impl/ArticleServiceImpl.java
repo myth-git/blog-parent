@@ -1,6 +1,7 @@
 package com.sise.blog.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sise.blog.dao.dos.Archives;
 import com.sise.blog.dao.mapper.ArticleBodyMapper;
@@ -47,9 +48,21 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public Result listArticlesPage(PageParams pageParams) {
-        /*
+        Page<Article> page = new Page<>(pageParams.getPage(), pageParams.getPageSize());
+        IPage<Article> articleIPage = articleMapper.listArticle(page,
+                pageParams.getCategoryId(),
+                pageParams.getTagId(),
+                pageParams.getYear(),
+                pageParams.getMonth());
+        List<Article> records = articleIPage.getRecords();
+        return Result.success(copyList(records,true,true));
+    }
+
+    /*@Override
+    public Result listArticlesPage(PageParams pageParams) {
+        *//*
          * 分页查询数据
-         * */
+         * *//*
         Page<Article> page = new Page<>(pageParams.getPage(), pageParams.getPageSize());
         LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
         if (pageParams.getCategoryId() != null) {
@@ -78,7 +91,7 @@ public class ArticleServiceImpl implements ArticleService {
         //能直接返回吗?不能，一般封装为一个VO类
         List<ArticleVo> articleVoList = copyList(records, true, true);
         return Result.success(articleVoList);
-    }
+    }*/
 
     @Override
     public Result hotArticle(int limit) {
