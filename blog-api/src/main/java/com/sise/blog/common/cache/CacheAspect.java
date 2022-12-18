@@ -66,6 +66,7 @@ public class CacheAspect {
             String redisValue = redisTemplate.opsForValue().get(redisKey);
             if (StringUtils.isNotEmpty(redisValue)){
                 log.info("走了缓存~~~,{},{}",className,methodName);
+                //这里json解析出现问题，导致点击详情时精度丢失
                 return JSON.parseObject(redisValue, Result.class);
             }
             Object proceed = pjp.proceed();
