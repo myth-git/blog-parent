@@ -1,0 +1,10 @@
+server:
+  port: 7001
+spring:
+  profiles:
+    active: dev
+  application:
+    name: blog-eureka
+#ribbon:
+#  ReadTimeout: 600000
+#  ConnectTimeout: 600000

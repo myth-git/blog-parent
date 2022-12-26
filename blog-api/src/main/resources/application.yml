@@ -1,0 +1,12 @@
+# server
+#server.port=8889
+#spring.application.name=personal_blog
+server:
+  port: 8889
+spring:
+  profiles:
+    active: dev
+  application:
+    name: blog-server #指定服务名
+
+
