@@ -1,4 +1,4 @@
-package com.sise.blog.constant;
+package com.sise.common.constant;
 
 /**
  * redis常量

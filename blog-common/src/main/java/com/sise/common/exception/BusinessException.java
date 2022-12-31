@@ -1,9 +1,9 @@
-package com.sise.blog.exception;
+package com.sise.common.exception;
 
-import com.sise.blog.enums.StatusCodeEnum;
+import com.sise.common.enums.StatusCodeEnum;
 import lombok.Getter;
 
-import static com.sise.blog.enums.StatusCodeEnum.FAIL;
+import static com.sise.common.enums.StatusCodeEnum.FAIL;
 
 /*
 * 处理业务异常

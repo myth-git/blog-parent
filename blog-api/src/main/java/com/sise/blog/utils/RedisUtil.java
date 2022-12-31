@@ -1,7 +1,7 @@
 package com.sise.blog.utils;
 
 
-import com.sise.blog.exception.BusinessException;
+import com.sise.common.exception.BusinessException;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Component;

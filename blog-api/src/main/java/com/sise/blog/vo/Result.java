@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import static com.sise.blog.enums.StatusCodeEnum.FAIL;
-import static com.sise.blog.enums.StatusCodeEnum.SUCCESS;
+import static com.sise.common.enums.StatusCodeEnum.FAIL;
+import static com.sise.common.enums.StatusCodeEnum.SUCCESS;
 
 @Data
 @AllArgsConstructor

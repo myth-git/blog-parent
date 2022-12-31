@@ -1,4 +1,4 @@
-package com.sise.blog.constant;
+package com.sise.common.constant;
 
 /**
  * 消息常量

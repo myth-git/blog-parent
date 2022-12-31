@@ -1,7 +1,6 @@
 package com.sise.blog.controller.login;
 
-import com.mysql.cj.protocol.x.MessageConstants;
-import com.sise.blog.constant.MessageConstant;
+import com.sise.common.constant.MessageConstant;
 import com.sise.blog.utils.RedisUtil;
 import com.sise.blog.vo.Result;
 import com.wf.captcha.SpecCaptcha;
@@ -17,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.UUID;
 
-import static com.sise.blog.constant.RedisConst.*;
+import static com.sise.common.constant.RedisConst.*;
 
 @RestController
 @Api(value = "用户信息管理模块", description = "管理用户信息验证")

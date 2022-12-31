@@ -12,6 +12,7 @@
         <module>blog-admin</module>
         <module>blog-eureka</module>
         <module>blog-gateway</module>
+        <module>blog-common</module>
     </modules>
     <!--声明为父工程-->
     <packaging>pom</packaging>
@@ -29,7 +30,21 @@
         <java.version>1.8</java.version>
         <springfox.version>2.7.0</springfox.version>
         <swagger.version>1.5.22</swagger.version>
+        <mybatisplus-spring-boot-starter.version>1.0.5</mybatisplus-spring-boot-starter.version>
+        <mybatisplus.version>2.2.0</mybatisplus.version>
     </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
     <dependencyManagement>
         <dependencies>
@@ -47,11 +62,11 @@
                 <version>3.2.2</version>
             </dependency>
 
-            <dependency>
-                <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-boot-starter</artifactId>
-                <version>3.4.3</version>
-            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>com.baomidou</groupId>-->
+<!--                <artifactId>mybatis-plus-boot-starter</artifactId>-->
+<!--                <version>3.4.3</version>-->
+<!--            </dependency>-->
 
             <!-- https://mvnrepository.com/artifact/joda-time/joda-time -->
             <dependency>

@@ -1,4 +1,4 @@
-package com.sise.blog.enums;
+package com.sise.common.enums;
 
 
 import lombok.AllArgsConstructor;

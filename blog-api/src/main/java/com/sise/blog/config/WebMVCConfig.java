@@ -16,7 +16,7 @@ public class WebMVCConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         // 跨域配置  允许8080端口访问本项目的8888端口 两个服务用统一端口会发生冲突问题
-        registry.addMapping("/**").allowedOrigins("http://localhost:8082");
+        registry.addMapping("/**").allowedOrigins("http://localhost:8080");
     }
 
     /**
