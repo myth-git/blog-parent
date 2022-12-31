@@ -15,4 +15,6 @@ import java.util.List;
  */
 public interface ArticlesService extends IService<Articles> {
     Page<ArticlesVO> findHomePage(QueryPageVO queryPageVO);
+
+    List<Articles> latestList();
 }

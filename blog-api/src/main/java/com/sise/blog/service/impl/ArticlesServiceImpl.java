@@ -11,6 +11,8 @@ import com.sise.common.vo.QueryPageVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @Description:
  * @Author: xzw
@@ -30,5 +32,15 @@ public class ArticlesServiceImpl extends ServiceImpl<ArticlesDao,Articles> imple
         page.setTotal(articlesDao.selectCount(queryWrapper));
         page.setRecords(articlesDao.findHomePage(queryPageVO));
         return page;
+    }
+
+    @Override
+    public List<Articles> latestList() {
+        QueryWrapper<Articles> queryWrapper = new QueryWrapper<>();
+        queryWrapper.select("id","title","create_time")
+                    .last("limit 0,6")
+                    .orderByDesc("create_time");
+        List<Articles> articles = articlesDao.selectList(queryWrapper);
+        return articles;
     }
 }

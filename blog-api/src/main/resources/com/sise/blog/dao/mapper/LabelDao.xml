@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--MyBatis配置文件-->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sise.blog.dao.mapper.LabelDao">
+
+
+    <select id="findLabel" resultType="com.sise.common.vo.LabelVO">
+        select distinct l.id,l.label_name,count(al.label_id) as labelCount
+        from blog_label l
+        left join blog_articles_label al on l.id = al.label_id
+        group by l.id
+        order by count(al.label_id) desc
+    </select>
+</mapper>
