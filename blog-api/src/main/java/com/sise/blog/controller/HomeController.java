@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @Api(tags = "首页展示模块",value = "首页展示模块", description = "首页展示模块的接口信息")
 @RequestMapping("/home")
 @RestController
+@CrossOrigin
 public class HomeController {
 
     @Autowired

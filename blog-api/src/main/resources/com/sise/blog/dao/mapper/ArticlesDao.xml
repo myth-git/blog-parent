@@ -21,4 +21,11 @@
         LIMIT ${queryPageVO.pageSize * (queryPageVO.currentPage-1)},#{queryPageVO.pageSize}
 
     </select>
+    <select id="findPersonBlog" resultType="com.sise.common.vo.ArticlesVO">
+        select b.blog_id, t.type_name, b.recommend, b.published, b.update_time, b.title
+        from blog_articles a , blog_type t
+        where a.type_id = t.id
+        and a.user_id = #{id}
+        limit ${queryPageVO.pageSize * (queryPageVO.currentPage-1)},#{queryPageVO.pageSize}
+    </select>
 </mapper>

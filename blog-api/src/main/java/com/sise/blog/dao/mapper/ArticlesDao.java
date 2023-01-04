@@ -18,4 +18,6 @@ import java.util.List;
 @Repository
 public interface ArticlesDao extends BaseMapper<Articles> {
     List<ArticlesVO> findHomePage(@Param("queryPageVO") QueryPageVO queryPageVO);
+
+    List<ArticlesVO> findPersonBlog(@Param("queryPageVO") QueryPageVO queryPageVO, @Param("id") Long id);
 }

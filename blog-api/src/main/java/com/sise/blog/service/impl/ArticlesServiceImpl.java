@@ -43,4 +43,16 @@ public class ArticlesServiceImpl extends ServiceImpl<ArticlesDao,Articles> imple
         List<Articles> articles = articlesDao.selectList(queryWrapper);
         return articles;
     }
+
+    @Override
+    public Page<ArticlesVO> findPersonBlog(QueryPageVO queryPageVO, Long id) {
+
+        Page<ArticlesVO> page = new Page<>(queryPageVO.getCurrentPage(), queryPageVO.getPageSize());
+        QueryWrapper<Articles> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("user_id", id);
+        //查询文章总数
+        page.setTotal(articlesDao.selectCount(queryWrapper));
+        page.setRecords(articlesDao.findPersonBlog(queryPageVO, id));
+        return page;
+    }
 }
