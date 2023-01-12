@@ -1,0 +1,17 @@
+G:\IdeaProject\blog-parent\blog-admin\src\main\java\com\sise\blog\admin\AdminApp.java
+G:\IdeaProject\blog-parent\blog-admin\src\main\java\com\sise\blog\admin\service\SecurityUserService.java
+G:\IdeaProject\blog-parent\blog-admin\src\main\java\com\sise\blog\admin\model\params\PageParam.java
+G:\IdeaProject\blog-parent\blog-admin\src\main\java\com\sise\blog\admin\pojo\Admin.java
+G:\IdeaProject\blog-parent\blog-admin\src\main\java\com\sise\blog\admin\pojo\Permission.java
+G:\IdeaProject\blog-parent\blog-admin\src\main\java\com\sise\blog\admin\config\SecurityConfig.java
+G:\IdeaProject\blog-parent\blog-admin\src\main\java\com\sise\blog\admin\service\impl\AdminServiceImpl.java
+G:\IdeaProject\blog-parent\blog-admin\src\main\java\com\sise\blog\admin\config\MybatisPlusConfig.java
+G:\IdeaProject\blog-parent\blog-admin\src\main\java\com\sise\blog\admin\service\AuthService.java
+G:\IdeaProject\blog-parent\blog-admin\src\main\java\com\sise\blog\admin\vo\Result.java
+G:\IdeaProject\blog-parent\blog-admin\src\main\java\com\sise\blog\admin\mapper\PermissionMapper.java
+G:\IdeaProject\blog-parent\blog-admin\src\main\java\com\sise\blog\admin\vo\PageResult.java
+G:\IdeaProject\blog-parent\blog-admin\src\main\java\com\sise\blog\admin\service\AdminService.java
+G:\IdeaProject\blog-parent\blog-admin\src\main\java\com\sise\blog\admin\controller\AdminController.java
+G:\IdeaProject\blog-parent\blog-admin\src\main\java\com\sise\blog\admin\mapper\AdminMapper.java
+G:\IdeaProject\blog-parent\blog-admin\src\main\java\com\sise\blog\admin\service\impl\PermissionServiceImpl.java
+G:\IdeaProject\blog-parent\blog-admin\src\main\java\com\sise\blog\admin\service\PermissionService.java

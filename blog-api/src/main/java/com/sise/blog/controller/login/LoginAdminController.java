@@ -20,7 +20,7 @@ import static com.sise.common.constant.RedisConst.*;
 
 @RestController
 @Api(value = "用户信息管理模块", description = "管理用户信息验证")
-@RequestMapping("admin")
+@RequestMapping("admapi")
 public class LoginAdminController {
 
     @Resource

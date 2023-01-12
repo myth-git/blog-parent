@@ -5,6 +5,7 @@ import com.sise.blog.dto.UserDetailDTO;
 import com.sise.common.pojo.User;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * @Description:
@@ -32,4 +33,8 @@ public interface UserService extends IService<User> {
     * 根据id查询用户
     * */
     User findById(long userId);
+    /*
+     * 获取用户列表
+     * */
+    List<User> getUserList();
 }

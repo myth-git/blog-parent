@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("users")
 @Api(value = "用户信息模块", description = "用户信息模块的接口信息")
-public class UserController {
+public class UsersController {
 
     @Autowired
     private SysUserService sysUserService;

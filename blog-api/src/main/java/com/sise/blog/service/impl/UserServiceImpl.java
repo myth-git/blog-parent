@@ -137,6 +137,14 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
         return userDao.selectOne(queryWrapper);
     }
 
+    @Override
+    public List<User> getUserList() {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.select("id", "username", "nickname", "avatar")
+                    .orderByAsc("create_time");
+        return userDao.selectList(queryWrapper);
+    }
+
     /**
      * 用户提供的图片链接无效就自动生成图片
      *
