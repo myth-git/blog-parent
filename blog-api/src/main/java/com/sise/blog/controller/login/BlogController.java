@@ -2,7 +2,8 @@ package com.sise.blog.controller.login;
 
 import com.sise.blog.annotation.LoginRequired;
 import com.sise.blog.service.ArticlesService;
-import com.sise.blog.vo.Result;
+import com.sise.common.dto.AddBlogDTO;
+import com.sise.common.entity.Result;
 import com.sise.common.pojo.User;
 import com.sise.common.vo.QueryPageVO;
 import io.swagger.annotations.Api;
@@ -34,4 +35,29 @@ public class BlogController {
         User user = (User) request.getAttribute("currentUser");//获取登录后的信息
         return Result.ok("获取分页数据成功", articlesService.findPersonBlog(queryPageVO, user.getId()));
     }
+
+    @LoginRequired
+    @ApiOperation(value = "用户添加或更新博客")
+    @PostMapping("/admin/addOrUpdate")
+    public Result addOrUpdate(@RequestBody AddBlogDTO addBlogDTO, HttpServletRequest request) {
+        //获取登录后的用户信息
+        User user = (User) request.getAttribute("currentUser");
+        Long blogId = articlesService.addOrUpdate(addBlogDTO, user.getId());
+        return Result.ok("用户添加或更新博客成功");
+    }
+
+    @ApiOperation(value = "首页获取根据id博客信息")
+    @GetMapping("/{id}")
+    public Result getBlogDetail(@PathVariable("id") Long id) {
+        //更新阅读量
+        articlesService.updateView(id);
+        return Result.ok("获取博客信息成功", articlesService.getBlogDetail(id));
+    }
+
+    @ApiOperation(value = "后台编辑获取根据id博客信息")
+    @GetMapping("/admin/{id}")
+    public Result getAdminBlogDetail(@PathVariable("id") Long id) {
+        return Result.ok("获取后台博客信息成功", articlesService.getAdminBlogDetail(id));
+    }
+
 }

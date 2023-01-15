@@ -13,4 +13,10 @@ import java.util.List;
  */
 public interface TypeService extends IService<Type> {
     List<TypeVO> findType();
+
+    /**
+     * 获取添加博客列表渲染
+     * @return
+     */
+    List<Type> getTypeList();
 }

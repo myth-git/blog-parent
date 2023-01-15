@@ -13,4 +13,11 @@ import java.util.List;
  */
 public interface LabelService extends IService<Label> {
     List<LabelVO> findLabel();
+
+    /**
+     * 获取添加博客标签回显
+     * @return
+     */
+    List<Label> getTagList();
+
 }

@@ -25,4 +25,11 @@ public class LabelServiceImpl extends ServiceImpl<LabelDao,Label> implements Lab
     public List<LabelVO> findLabel() {
         return labelDao.findLabel();
     }
+
+    @Override
+    public List<Label> getTagList() {
+        List<Label> labelList = labelDao.selectList(null);
+        return labelList;
+    }
+
 }

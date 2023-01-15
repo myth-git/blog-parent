@@ -2,8 +2,10 @@ package com.sise.blog.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.sise.common.dto.AddBlogDTO;
 import com.sise.common.pojo.Articles;
 import com.sise.common.vo.ArticlesVO;
+import com.sise.common.vo.BlogVO;
 import com.sise.common.vo.QueryPageVO;
 
 import java.util.List;
@@ -33,4 +35,32 @@ public interface ArticlesService extends IService<Articles> {
      * @return
      */
     Page<ArticlesVO> findPersonBlog(QueryPageVO queryPageVO, Long id);
+
+    /**
+     * 用户添加或更新博客
+     * @param addBlogDTO
+     * @param id
+     * @return
+     */
+    Long addOrUpdate(AddBlogDTO addBlogDTO, Long id);
+
+    /**
+     * 根据id获取博客的信息
+     * @param id
+     * @return
+     */
+    BlogVO getBlogDetail(Long id);
+
+    /**
+     * 后台编辑获取根据id博客信息
+     * @param id
+     * @return
+     */
+    BlogVO getAdminBlogDetail(Long id);
+
+    /**
+     * 更新博客浏览量
+     * @param id
+     */
+    void updateView(Long id);
 }

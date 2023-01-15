@@ -25,4 +25,10 @@ public class TypeServiceImpl extends ServiceImpl<TypeDao, Type> implements TypeS
     public List<TypeVO> findType() {
         return typeDao.findType();
     }
+
+    @Override
+    public List<Type> getTypeList() {
+        List<Type> typeList = typeDao.selectList(null);
+        return typeList;
+    }
 }

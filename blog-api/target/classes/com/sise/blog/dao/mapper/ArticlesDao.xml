@@ -22,7 +22,7 @@
 
     </select>
     <select id="findPersonBlog" resultType="com.sise.common.vo.ArticlesVO">
-        select b.blog_id, t.type_name, b.recommend, b.published, b.update_time, b.title
+        select a.id, t.type_name, a.recommend, a.published, a.update_time, a.title
         from blog_articles a , blog_type t
         where a.type_id = t.id
         and a.user_id = #{id}

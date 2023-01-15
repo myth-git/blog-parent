@@ -12,4 +12,9 @@
         group by l.id
         order by count(al.label_id) desc
     </select>
+    <select id="getLabelNameList" resultType="com.sise.common.pojo.Label">
+        select bl.id,bl.label_name
+        from blog_articles_label bal,blog_label bl
+        where bal.articles_id = #{id} and bal.label_id = bl.id
+    </select>
 </mapper>
