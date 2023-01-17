@@ -1,8 +1,11 @@
 package com.sise.blog.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.sise.common.pojo.Label;
+import com.sise.common.vo.ArticlesVO;
 import com.sise.common.vo.LabelVO;
+import com.sise.common.vo.QueryPageVO;
 
 import java.util.List;
 
@@ -20,4 +23,5 @@ public interface LabelService extends IService<Label> {
      */
     List<Label> getTagList();
 
+    Page<ArticlesVO> getByLabelId(QueryPageVO queryPageVO);
 }
