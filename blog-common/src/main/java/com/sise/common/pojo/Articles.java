@@ -109,8 +109,9 @@ public class Articles extends Model<Articles> {
 
     private Integer typeId;
     /*
-    * 用户id
+    * 用户id,解决进度损失问题
     * */
+    @JsonSerialize(using = JsonLongSerializer.class)
     private Long userId;
 
     /**

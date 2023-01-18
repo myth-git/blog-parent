@@ -2,7 +2,10 @@ package com.sise.blog.dao.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.sise.common.pojo.Comment;
+import com.sise.common.vo.CommentVO;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * @Description:
@@ -11,4 +14,9 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface CommentDao extends BaseMapper<Comment> {
+
+    List<CommentVO> getRootList(Long id);
+
+    List<CommentVO> getChildList(Long id);
+
 }

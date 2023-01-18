@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--MyBatis配置文件-->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sise.blog.dao.mapper.CommentDao">
+
+    <select id="getRootList" resultType="com.sise.common.vo.CommentVO">
+    select u.nickname, u.avatar, c.comment_id, c.uid, c.content, c.create_time, c.blog_id, c.parent_comment_id
+    from blog_user u, blog_comment c
+    where u.id = c.uid and c.blog_id = #{id} and c.parent_comment_id = -1
+    </select>
+    <select id="getChildList" resultType="com.sise.common.vo.CommentVO">
+    select u.nickname, u.avatar, c.comment_id, c.uid, c.content, c.create_time, c.blog_id, c.parent_comment_id, c.reply_uid, uu.nickname as replyNickname
+    from blog_user u, blog_comment c, blog_user uu
+    where u.id = c.uid and c.blog_id = #{id} and c.parent_comment_id != -1 and c.reply_uid = uu.id
+    </select>
+</mapper>
