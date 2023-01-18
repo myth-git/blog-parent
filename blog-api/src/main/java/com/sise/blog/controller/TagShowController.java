@@ -1,5 +1,6 @@
 package com.sise.blog.controller;
 
+import com.sise.blog.service.ArticlesLabelService;
 import com.sise.blog.service.ArticlesService;
 import com.sise.blog.service.LabelService;
 import com.sise.common.entity.Result;
@@ -24,6 +25,8 @@ public class TagShowController {
     private ArticlesService articlesService;
     @Autowired
     private LabelService labelService;
+    @Autowired
+    private ArticlesLabelService articlesLabelServicel;
 
     @ApiOperation(value = "根据标签类型分页展示", notes = "返回分页数据")
     @PostMapping("/getById")
@@ -31,7 +34,7 @@ public class TagShowController {
         if (queryPageVO.getLabelId() == null) {
             return Result.ok("获取标签信息成功", articlesService.findHomePage(queryPageVO));
         }else {
-            return Result.ok("根据标签id获取标签信息成功", labelService.getByLabelId(queryPageVO));
+            return Result.ok("根据标签id获取标签信息成功", articlesLabelServicel.getByLabelId(queryPageVO));
         }
     }
 }

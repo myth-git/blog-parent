@@ -40,18 +40,5 @@ public class LabelServiceImpl extends ServiceImpl<LabelDao,Label> implements Lab
         return labelList;
     }
 
-    @Override
-    public Page<ArticlesVO> getByLabelId(QueryPageVO queryPageVO) {
-        Integer currentPage = queryPageVO.getCurrentPage(); //当前页
-        Integer pageSize = queryPageVO.getPageSize(); ////每页记录数
-        Integer start = (currentPage - 1) * pageSize;
-        //分页条件
-        Page<ArticlesVO> page = new Page<>(queryPageVO.getCurrentPage(), queryPageVO.getPageSize());
-        QueryWrapper<ArticlesLabel> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq(queryPageVO.getLabelId() != null, "label_id", queryPageVO.getLabelId());
-        page.setTotal(articlesLabelDao.selectCount(queryWrapper));
-        page.setRecords(articlesLabelDao.getByTagId(start, pageSize, queryPageVO.getLabelId()));
-        return page;
-    }
 
 }

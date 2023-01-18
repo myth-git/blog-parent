@@ -23,5 +23,4 @@ public interface LabelService extends IService<Label> {
      */
     List<Label> getTagList();
 
-    Page<ArticlesVO> getByLabelId(QueryPageVO queryPageVO);
 }

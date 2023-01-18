@@ -161,6 +161,16 @@ public class ArticlesServiceImpl extends ServiceImpl<ArticlesDao,Articles> imple
 
     }
 
+    @Override
+    public Page<ArticlesVO> getByTypeId(QueryPageVO queryPageVO) {
+        Page<ArticlesVO> page = new Page<>(queryPageVO.getCurrentPage(), queryPageVO.getPageSize());
+        QueryWrapper<Articles> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(queryPageVO.getTypeId() != null, "type_id", queryPageVO.getTypeId());
+        page.setTotal(articlesDao.selectCount(queryWrapper));
+        page.setRecords(articlesDao.findHomePage(queryPageVO));
+        return page;
+    }
+
     private void setBlogViews(Long id) {
         QueryWrapper<Articles> queryWrapper = new QueryWrapper<>();
         queryWrapper.select("views")

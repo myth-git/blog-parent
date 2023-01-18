@@ -63,4 +63,11 @@ public interface ArticlesService extends IService<Articles> {
      * @param id
      */
     void updateView(Long id);
+
+    /**
+     * 根据分类id获取博客分页数据
+     * @param queryPageVO
+     * @return
+     */
+    Page<ArticlesVO> getByTypeId(QueryPageVO queryPageVO);
 }
