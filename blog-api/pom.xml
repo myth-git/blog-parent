@@ -201,6 +201,12 @@
             <version>0.10.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>5.7.5</version>
+        </dependency>
+
     </dependencies>
 
 </project>

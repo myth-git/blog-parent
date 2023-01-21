@@ -6,24 +6,18 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.sise.blog.dao.mapper.ArticlesDao;
-import com.sise.blog.dao.mapper.LabelDao;
-import com.sise.blog.service.ArticlesLabelService;
-import com.sise.blog.service.LabelService;
-import com.sise.blog.service.UserService;
+import com.sise.blog.dao.mapper.*;
+import com.sise.blog.service.*;
 import com.sise.blog.utils.MarkdownUtils;
 import com.sise.blog.utils.RedisUtil;
 import com.sise.common.constant.CommonConst;
 import com.sise.common.constant.RedisConst;
-import com.sise.common.dto.AddBlogDTO;
-import com.sise.common.pojo.Articles;
-import com.sise.blog.service.ArticlesService;
-import com.sise.common.pojo.ArticlesLabel;
-import com.sise.common.pojo.Label;
-import com.sise.common.pojo.User;
+import com.sise.common.dto.*;
+import com.sise.common.pojo.*;
 import com.sise.common.vo.ArticlesVO;
 import com.sise.common.vo.BlogVO;
 import com.sise.common.vo.QueryPageVO;
+import com.sise.common.vo.TypeVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -56,6 +50,16 @@ public class ArticlesServiceImpl extends ServiceImpl<ArticlesDao,Articles> imple
     private HttpSession session;
     @Autowired
     private RedisUtil redisUtil;
+    @Autowired
+    private ViewsDao viewsDao;
+    @Autowired
+    private MessageDao messageDao;
+    @Autowired
+    private UserDao userDao;
+    @Autowired
+    private ViewsService viewsService;
+    @Autowired
+    private TypeDao typeDao;
 
     @Override
     public Page<ArticlesVO> findHomePage(QueryPageVO queryPageVO) {
@@ -169,6 +173,48 @@ public class ArticlesServiceImpl extends ServiceImpl<ArticlesDao,Articles> imple
         page.setTotal(articlesDao.selectCount(queryWrapper));
         page.setRecords(articlesDao.findHomePage(queryPageVO));
         return page;
+    }
+
+    @Override
+    public BlogBackInfoDTO getBlogBackInfo() {
+        // 查询访问量
+        Integer viewsCount = viewsDao.selectOne(new QueryWrapper<Views>().select("SUM(count) as count")).getCount();
+        // 查询留言量
+        Integer messageCount = messageDao.selectCount(null);
+        // 查询用户量
+        Integer userCount = userDao.selectCount(null);
+        // 查询文章量
+        Integer blogCount = articlesDao.selectCount(null);
+        // 查询一周访问量
+        List<ViewsDTO> viewsDTOList = viewsService.getViewsData();
+        // 查询文章统计
+        List<BlogStatisticsDTO> blogStatisticsDTOList = articlesDao.listArticleStatistics();
+        // 查询分类数据
+        List<TypeVO> typeVOList = typeDao.findType();
+        // 查询标签数据
+        List<Label> labelList = labelDao.selectList(null);
+        // 查询博客浏览量前五
+        List<Articles> articles = articlesDao.selectList(new LambdaQueryWrapper<Articles>()
+                .select(Articles::getId, Articles::getTitle, Articles::getViews)
+                .last("limit 5").orderByDesc(Articles::getViews));
+        List<BlogRankDTO> blogRankDTOList = articles.stream().map(t ->
+                BlogRankDTO.builder()
+                        .title(t.getTitle())
+                        .views(t.getViews())
+                        .build()
+        ).sorted(Comparator.comparingInt(BlogRankDTO::getViews).reversed()).collect(Collectors.toList());
+        BlogBackInfoDTO blogBackInfoDTO = BlogBackInfoDTO.builder()
+                .articleStatisticsList(blogStatisticsDTOList)
+                .tagList(labelList)
+                .typeList(typeVOList)
+                .viewsCount(viewsCount)
+                .messageCount(messageCount)
+                .userCount(userCount)
+                .articleCount(blogCount)
+                .blogRankDTOList(blogRankDTOList)
+                .viewsDTOList(viewsDTOList)
+                .build();
+        return blogBackInfoDTO;
     }
 
     private void setBlogViews(Long id) {

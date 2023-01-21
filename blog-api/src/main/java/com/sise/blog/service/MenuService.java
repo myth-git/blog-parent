@@ -18,4 +18,11 @@ public interface MenuService extends IService<Menu> {
      * @return
      */
     List<UserMenuDTO> listUserMenus(Long id);
+
+    /**
+     * 获取管理员菜单列表
+     * @param id
+     * @return
+     */
+    List<UserMenuDTO> listAdminMenus(Long id);
 }

@@ -41,7 +41,13 @@ public class MenuServiceImpl extends ServiceImpl<MenuDao, Menu> implements MenuS
         return listMenus(id, CommonConst.USER_MENUS);
     }
 
-    private List<UserMenuDTO> listMenus(Long id, int type) {
+    @Override
+    public List<UserMenuDTO> listAdminMenus(Long id) {
+        //ADMIN_MENUS表示管理员后台
+        return listMenus(id, CommonConst.ADMIN_MENUS);
+    }
+
+    private List<UserMenuDTO> listMenus(Long id, Integer type) {
         //根据用户id来获取角色对应id
         UserRole userRole = userRoleDao.selectOne(new LambdaQueryWrapper<UserRole>().eq(UserRole::getUid, id));
         //根据角色id获取对应的菜单id

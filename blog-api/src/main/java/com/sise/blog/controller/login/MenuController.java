@@ -39,4 +39,12 @@ public class MenuController {
 //        return Result.ok("获取用户菜单列表成功", menuService.listUserMenus(1523893866560778242L));
     }
 
+    @LoginRequired
+    @GetMapping("/admin/listAdminMenus")
+    @ApiOperation(value = "获取管理员菜单列表")
+    public Result listAdminMenus(HttpServletRequest request) {
+        User user = (User) request.getAttribute("currentUser");
+        return Result.ok("获取管理员菜单列表成功", menuService.listAdminMenus(user.getId()));
+    }
+
 }
