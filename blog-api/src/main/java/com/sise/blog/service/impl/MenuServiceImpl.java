@@ -14,6 +14,7 @@ import com.sise.common.pojo.admin.Menu;
 import com.sise.common.pojo.admin.RoleMenu;
 import com.sise.common.pojo.admin.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -40,7 +41,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuDao, Menu> implements MenuS
         //USER_MENUS表示用户后台
         return listMenus(id, CommonConst.USER_MENUS);
     }
-
+    @Cacheable(value = {"AdminMenus"}, key = "#root.methodName")
     @Override
     public List<UserMenuDTO> listAdminMenus(Long id) {
         //ADMIN_MENUS表示管理员后台
@@ -90,18 +91,18 @@ public class MenuServiceImpl extends ServiceImpl<MenuDao, Menu> implements MenuS
                         }).collect(Collectors.toList());
             } else {
                 //一级菜单处理, 可以变通, 一般不会执行这段代码
-//                userMenuDTO.setPath(catalog.getPath());
-//                userMenuDTO.setComponent("Layout");
-//                list.add(UserMenuDTO.builder()
-//                        .path("")
-//                        .name(catalog.getName())
-//                        .icon(catalog.getIcon())
-//                        .component(catalog.getComponent())
-//                        .build());
-                //无子目录处理
-                userMenuDTO = BeanCopyUtils.copyObject(catalog, UserMenuDTO.class);
-                //子目录为空
-                list.add(null);
+                userMenuDTO.setPath(catalog.getPath());
+                userMenuDTO.setComponent("Layout");
+                list.add(UserMenuDTO.builder()
+                        .path("")
+                        .name(catalog.getName())
+                        .icon(catalog.getIcon())
+                        .component(catalog.getComponent())
+                        .build());
+//                //无子目录处理
+//                userMenuDTO = BeanCopyUtils.copyObject(catalog, UserMenuDTO.class);
+//                //子目录为空
+//                list.add(null);
             }
             userMenuDTO.setHidden(catalog.getIsHidden().equals(1));
             userMenuDTO.setChildren(list);
