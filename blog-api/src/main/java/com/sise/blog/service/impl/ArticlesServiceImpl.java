@@ -217,6 +217,14 @@ public class ArticlesServiceImpl extends ServiceImpl<ArticlesDao,Articles> imple
         return blogBackInfoDTO;
     }
 
+    @Override
+    public Page<BlogAdminDTO> adminBlogPage(QueryPageVO queryPageVO) {
+        Page<BlogAdminDTO> page = new Page<>();
+        page.setRecords(articlesDao.BlogAdminPage(queryPageVO));
+        page.setTotal(articlesDao.BlogAdminPageCount(queryPageVO));
+        return page;
+    }
+
     private void setBlogViews(Long id) {
         QueryWrapper<Articles> queryWrapper = new QueryWrapper<>();
         queryWrapper.select("views")

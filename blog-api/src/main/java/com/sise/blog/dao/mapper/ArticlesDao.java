@@ -2,6 +2,7 @@ package com.sise.blog.dao.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.sise.common.dto.BlogAdminDTO;
 import com.sise.common.dto.BlogStatisticsDTO;
 import com.sise.common.pojo.Articles;
 import com.sise.common.vo.ArticlesVO;
@@ -30,5 +31,17 @@ public interface ArticlesDao extends BaseMapper<Articles> {
      * 文章统计
      */
     List<BlogStatisticsDTO> listArticleStatistics();
+    /**
+     * 获取后台博客列表
+     * @param queryPageVO
+     * @return list
+     */
+    List<BlogAdminDTO> BlogAdminPage(@Param("queryPageVO") QueryPageVO queryPageVO);
 
+    /**
+     * 获取管理后台对应博文数量
+     * @param queryPageVO
+     * @return
+     */
+    Integer BlogAdminPageCount(@Param("queryPageVO") QueryPageVO queryPageVO);
 }

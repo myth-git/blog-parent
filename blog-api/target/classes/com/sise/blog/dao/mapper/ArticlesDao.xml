@@ -30,4 +30,58 @@
         and a.user_id = #{id}
         limit ${queryPageVO.pageSize * (queryPageVO.currentPage-1)},#{queryPageVO.pageSize}
     </select>
+    <select id="BlogAdminPage" parameterType="com.sise.common.vo.QueryPageVO" resultMap="BlogAdminResultMap">
+        select ba.id, ba.create_time, ba.first_picture, ba.published, ba.title, ba.views, ba.thumbs, bt.type_name, ba.copyright
+        from blog_articles ba , blog_type bt
+        <if test="queryPageVO.labelId != null">
+           , blog_label bl , blog_articles_label bal
+        </if>
+        where ba.type_id = bt.id
+        <if test="queryPageVO.labelId != null">
+            and (bl.id = '${queryPageVO.labelId}') and (bal.articles_id = ba.id) and (bal.label_id = bl.id)
+        </if>
+        <if test="queryPageVO.queryString != null">
+            and ba.title = '%${queryPageVO.queryString}%'
+        </if>
+        <if test="queryPageVO.copyright !=null">
+            and (ba.copyright = '${queryPageVO.copyright}' )
+        </if>
+        <if test="queryPageVO.typeId !=null">
+            and (bt.id = '${queryPageVO.typeId}' )
+        </if>
+        LIMIT ${queryPageVO.pageSize * (queryPageVO.currentPage-1)},#{queryPageVO.pageSize}
+    </select>
+
+
+    <resultMap id="BlogAdminResultMap" type="com.sise.common.dto.BlogAdminDTO" >
+        <id column="id" property="blogId"/>
+        <result column="create_time" property="createTime"/>
+        <result column="first_picture" property="firstPicture"/>
+        <result column="published" property="published"/>
+        <result column="title" property="title"/>
+        <result column="views" property="views"/>
+        <result column="thumbs" property="thumbs"/>
+        <result column="copyright" property="copyright"/>
+        <result column="type_name" property="typeName"/>
+    </resultMap>
+    <select id="BlogAdminPageCount" parameterType="com.sise.common.vo.QueryPageVO" resultType="java.lang.Integer">
+        select count(distinct ba.id)
+        from blog_articles ba , blog_type bt
+        <if test="queryPageVO.labelId != null">
+            , blog_label bl , blog_articles_label bal
+        </if>
+        where ba.type_id = bt.id
+        <if test="queryPageVO.labelId != null">
+            and (bl.id = '${queryPageVO.labelId}') and (bal.articles_id = ba.id) and (bal.label_id = bl.id)
+        </if>
+        <if test="queryPageVO.queryString != null">
+            and ba.title = '%${queryPageVO.queryString}%'
+        </if>
+        <if test="queryPageVO.copyright !=null">
+            and (ba.copyright = '${queryPageVO.copyright}' )
+        </if>
+        <if test="queryPageVO.typeId !=null">
+            and (bt.id = '${queryPageVO.typeId}' )
+        </if>
+    </select>
 </mapper>

@@ -3,6 +3,7 @@ package com.sise.blog.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.sise.common.dto.AddBlogDTO;
+import com.sise.common.dto.BlogAdminDTO;
 import com.sise.common.dto.BlogBackInfoDTO;
 import com.sise.common.pojo.Articles;
 import com.sise.common.vo.ArticlesVO;
@@ -77,4 +78,11 @@ public interface ArticlesService extends IService<Articles> {
      * @return
      */
     BlogBackInfoDTO getBlogBackInfo();
+
+    /**
+     * 获取博客后台分页数据
+     * @param queryPageVO
+     * @return
+     */
+    Page<BlogAdminDTO> adminBlogPage(QueryPageVO queryPageVO);
 }

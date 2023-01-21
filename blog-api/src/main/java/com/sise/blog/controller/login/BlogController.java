@@ -66,4 +66,10 @@ public class BlogController {
         return Result.ok("查看后台管理员信息成功", articlesService.getBlogBackInfo());
     }
 
+    @ApiOperation(value = "管理员后台获取博客信息")
+    @GetMapping("/admin/blogPage")
+    public Result adminBlogPage(QueryPageVO queryPageVO) {
+        return Result.ok("获取管理员后台获取博客信息成功", articlesService.adminBlogPage(queryPageVO));
+    }
+
 }
