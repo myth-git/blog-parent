@@ -1,7 +1,9 @@
 package com.sise.blog.controller.login;
 
 import com.sise.blog.annotation.LoginRequired;
+import com.sise.blog.annotation.OptLog;
 import com.sise.blog.service.ArticlesService;
+import com.sise.common.constant.OptTypeConst;
 import com.sise.common.dto.AddBlogDTO;
 import com.sise.common.entity.Result;
 import com.sise.common.pojo.User;
@@ -12,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * @Description: 个人后台博客管理
@@ -70,6 +73,14 @@ public class BlogController {
     @GetMapping("/admin/blogPage")
     public Result adminBlogPage(QueryPageVO queryPageVO) {
         return Result.ok("获取管理员后台获取博客信息成功", articlesService.adminBlogPage(queryPageVO));
+    }
+
+    @OptLog(optType = OptTypeConst.REMOVE)
+    @ApiOperation(value = "管理员删除博客")
+    @DeleteMapping("/admin/delete")
+    public Result deleteBlogs(@RequestBody List<Long> blogIdList) {
+        articlesService.deleteBlogs(blogIdList);
+        return Result.ok("删除博客成功");
     }
 
 }

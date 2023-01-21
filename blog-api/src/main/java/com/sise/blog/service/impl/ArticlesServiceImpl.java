@@ -60,6 +60,14 @@ public class ArticlesServiceImpl extends ServiceImpl<ArticlesDao,Articles> imple
     private ViewsService viewsService;
     @Autowired
     private TypeDao typeDao;
+    @Autowired
+    private ArticlesLabelDao articlesLabelDao;
+    @Autowired
+    private ThumbsUpDao thumbsUpDao;
+    @Autowired
+    private FavoritesDao favoritesDao;
+    @Autowired
+    private CommentDao commentDao;
 
     @Override
     public Page<ArticlesVO> findHomePage(QueryPageVO queryPageVO) {
@@ -223,6 +231,22 @@ public class ArticlesServiceImpl extends ServiceImpl<ArticlesDao,Articles> imple
         page.setRecords(articlesDao.BlogAdminPage(queryPageVO));
         page.setTotal(articlesDao.BlogAdminPageCount(queryPageVO));
         return page;
+    }
+
+    @Override
+    public void deleteBlogs(List<Long> blogIdList) {
+        //删除博客标签的中间表数据
+        articlesLabelDao.delete(new LambdaQueryWrapper<ArticlesLabel>()
+                        .in(ArticlesLabel::getArticlesId, blogIdList));
+        //删除博客的点赞、收藏信息和评论信息
+        thumbsUpDao.delete(new LambdaQueryWrapper<ThumbsUp>()
+                    .in(ThumbsUp::getBlogId, blogIdList));
+        favoritesDao.delete(new LambdaQueryWrapper<Favorites>()
+                    .in(Favorites::getBlogId, blogIdList));
+        commentDao.delete(new LambdaQueryWrapper<Comment>()
+                  .in(Comment::getBlogId, blogIdList));
+        //删除博客
+        articlesDao.deleteBatchIds(blogIdList);
     }
 
     private void setBlogViews(Long id) {

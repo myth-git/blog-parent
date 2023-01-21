@@ -41,7 +41,7 @@
             and (bl.id = '${queryPageVO.labelId}') and (bal.articles_id = ba.id) and (bal.label_id = bl.id)
         </if>
         <if test="queryPageVO.queryString != null">
-            and ba.title = '%${queryPageVO.queryString}%'
+            and ba.title like '%${queryPageVO.queryString}%'
         </if>
         <if test="queryPageVO.copyright !=null">
             and (ba.copyright = '${queryPageVO.copyright}' )
@@ -75,7 +75,7 @@
             and (bl.id = '${queryPageVO.labelId}') and (bal.articles_id = ba.id) and (bal.label_id = bl.id)
         </if>
         <if test="queryPageVO.queryString != null">
-            and ba.title = '%${queryPageVO.queryString}%'
+            and ba.title like '%${queryPageVO.queryString}%'
         </if>
         <if test="queryPageVO.copyright !=null">
             and (ba.copyright = '${queryPageVO.copyright}' )

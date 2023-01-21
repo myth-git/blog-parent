@@ -85,4 +85,10 @@ public interface ArticlesService extends IService<Articles> {
      * @return
      */
     Page<BlogAdminDTO> adminBlogPage(QueryPageVO queryPageVO);
+
+    /**
+     * 删除博客
+     * @param blogIdList 博客列表id
+     */
+    void deleteBlogs(List<Long> blogIdList);
 }
