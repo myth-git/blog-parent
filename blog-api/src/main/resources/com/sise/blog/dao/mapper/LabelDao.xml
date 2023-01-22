@@ -17,4 +17,16 @@
         from blog_articles_label bal,blog_label bl
         where bal.articles_id = #{id} and bal.label_id = bl.id
     </select>
+    <select id="getAdminTag" parameterType="com.sise.common.vo.QueryPageVO" resultType="com.sise.common.vo.LabelVO">
+        select distinct bl.id,bl.label_name,count(bal.label_id) as labelCount
+        from blog_label bl
+        left join blog_articles_label bal
+        on bl.id = bal.label_id
+        <if test="queryPageVO.queryString != null">
+            where bl.label_name like '%${queryPageVO.queryString}%'
+        </if>
+        GROUP BY bl.id
+        ORDER BY count(bal.label_id) DESC
+        LIMIT ${queryPageVO.pageSize * (queryPageVO.currentPage-1)},#{queryPageVO.pageSize}
+    </select>
 </mapper>
