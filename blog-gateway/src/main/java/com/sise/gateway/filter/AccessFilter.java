@@ -135,6 +135,7 @@ public class AccessFilter extends BaseFilter {
             if (userResource == null) {
                 //缓存中不存在,查数据库
                 userResource = resourceApi.getUserResource(String.valueOf(id));
+                System.out.println("========================"+userResource);
             }
 
             //7.判断用户拥有的权限是否包含当前请求的权限标识符，有则代表用户有权限，直接放行

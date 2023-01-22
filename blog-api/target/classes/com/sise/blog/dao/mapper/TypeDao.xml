@@ -11,4 +11,16 @@
         group by t.id
         order by count(a.type_id) desc
     </select>
+    <select id="getAdminType" parameterType="com.sise.common.vo.QueryPageVO" resultType="com.sise.common.vo.TypeVO">
+        select distinct bt.id,bt.type_name,count(ba.type_id) type_count
+        from blog_type bt
+        left join blog_articles ba
+        on bt.id = ba.type_id
+        <if test="queryPageVO.queryString !=null">
+            where bt.type_name LIKE '%${queryPageVO.queryString}%'
+        </if>
+        GROUP BY bt.id
+        ORDER BY COUNT(ba.type_id) DESC
+        LIMIT ${queryPageVO.pageSize * (queryPageVO.currentPage-1)},#{queryPageVO.pageSize}
+    </select>
 </mapper>
