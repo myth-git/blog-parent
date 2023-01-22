@@ -1,8 +1,10 @@
 package com.sise.blog.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.sise.common.pojo.Comment;
 import com.sise.common.vo.CommentVO;
+import com.sise.common.vo.QueryPageVO;
 
 import java.util.List;
 
@@ -34,4 +36,11 @@ public interface CommentService extends IService<Comment> {
      * @return
      */
     boolean deleteComments(Long blogId, Long commentId, Long id);
+
+    /**
+     * 获取管理员后台的评论分页数据
+     * @param queryPageVO
+     * @return
+     */
+    Page<CommentVO> adminComments(QueryPageVO queryPageVO);
 }

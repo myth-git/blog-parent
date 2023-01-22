@@ -2,17 +2,21 @@ package com.sise.blog.controller;
 
 import com.sise.blog.annotation.LoginRequired;
 
+import com.sise.blog.annotation.OptLog;
 import com.sise.blog.service.CommentService;
 import com.sise.blog.vo.CommentVo;
+import com.sise.common.constant.OptTypeConst;
 import com.sise.common.entity.Result;
 import com.sise.common.pojo.Comment;
 import com.sise.common.pojo.User;
+import com.sise.common.vo.QueryPageVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * @Description: 评论模块
@@ -53,5 +57,19 @@ public class CommentController {
         } else {
             return Result.fail("该评论不是你发的，你无权删除！！");
         }
+    }
+
+    @ApiOperation(value = "获取管理员后台的评论分页数据")
+    @PostMapping("/admin/commentPage")
+    public Result adminComments(@RequestBody QueryPageVO queryPageVO){
+        return Result.ok("获取管理员后台的评论分页数据", commentService.adminComments(queryPageVO));
+    }
+
+    @OptLog(optType = OptTypeConst.REMOVE)
+    @ApiOperation(value = "管理员删除评论")
+    @DeleteMapping("/admin/delete")
+    public Result adminDelComment(@RequestBody List<Long> commentIdList) {
+        commentService.removeByIds(commentIdList);
+        return Result.ok("管理员删除评论成功");
     }
 }

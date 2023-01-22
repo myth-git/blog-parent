@@ -3,6 +3,8 @@ package com.sise.blog.dao.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.sise.common.pojo.Comment;
 import com.sise.common.vo.CommentVO;
+import com.sise.common.vo.QueryPageVO;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -19,4 +21,5 @@ public interface CommentDao extends BaseMapper<Comment> {
 
     List<CommentVO> getChildList(Long id);
 
+    List<CommentVO> adminComments(@Param("queryPageVO") QueryPageVO queryPageVO);
 }

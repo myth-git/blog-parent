@@ -1,11 +1,13 @@
 package com.sise.blog.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sise.blog.dao.mapper.CommentDao;
 import com.sise.blog.service.CommentService;
 import com.sise.common.pojo.Comment;
 import com.sise.common.vo.CommentVO;
+import com.sise.common.vo.QueryPageVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -59,6 +61,14 @@ public class CommentServiceImpl extends ServiceImpl<CommentDao, Comment> impleme
         arrayList.add(commentId);
         commentDao.deleteBatchIds(arrayList);
         return true;
+    }
+
+    @Override
+    public Page<CommentVO> adminComments(QueryPageVO queryPageVO) {
+        Page<CommentVO> page = new Page<>();
+        page.setRecords(commentDao.adminComments(queryPageVO));
+        page.setTotal(commentDao.selectCount(null));
+        return page;
     }
 
     private void getDelIds(Long commentId, List<Long> arrayList) {
