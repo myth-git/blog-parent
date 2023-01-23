@@ -14,4 +14,17 @@
     from blog_user u, blog_comment c, blog_user uu
     where u.id = c.uid and c.blog_id = #{id} and c.parent_comment_id != -1 and c.reply_uid = uu.id
     </select>
+    <select id="adminComments" parameterType="com.sise.common.vo.QueryPageVO" resultType="com.sise.common.vo.CommentVO">
+        SELECT  c.comment_id, c.uid, c.nickname, u.nickname as reply_nickname, c.content, c.title, c.create_time, c.avatar
+        FROM (
+        SELECT DISTINCT c.comment_id, c.uid, u.nickname, c.reply_uid, b.title, u.avatar, c.content, DATE_FORMAT(c.create_time,'%Y-%m-%d') as 'create_time'
+        FROM `blog_user` u, blog_articles b, `blog_comment` c
+        WHERE u.id = c.uid AND c.blog_id = b.id
+        <if test="queryPageVO.queryString !=null">
+            AND u.nickname LIKE '%${queryPageVO.queryString}%'
+        </if>
+        ) as c LEFT JOIN `blog_user` u  on u.id= c.reply_uid
+        ORDER BY c.create_time DESC
+        LIMIT ${queryPageVO.pageSize * (queryPageVO.currentPage-1)},#{queryPageVO.pageSize}
+    </select>
 </mapper>

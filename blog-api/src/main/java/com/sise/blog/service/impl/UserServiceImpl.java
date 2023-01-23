@@ -3,6 +3,7 @@ package com.sise.blog.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sise.blog.dao.mapper.RoleDao;
 import com.sise.blog.dao.mapper.UserDao;
@@ -13,8 +14,11 @@ import com.sise.blog.utils.IpUtil;
 import com.sise.blog.utils.RedisUtil;
 import com.sise.common.constant.MessageConstant;
 import com.sise.common.constant.RedisConst;
+import com.sise.common.dto.UserBackDTO;
 import com.sise.common.pojo.User;
 import com.sise.common.pojo.admin.UserRole;
+import com.sise.common.vo.QueryPageVO;
+import com.sise.common.vo.UserDisableVO;
 import eu.bitwalker.useragentutils.UserAgent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -143,6 +147,25 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
         queryWrapper.select("id", "username", "nickname", "avatar")
                     .orderByAsc("create_time");
         return userDao.selectList(queryWrapper);
+    }
+
+    @Override
+    public Page<UserBackDTO> getAdminUser(QueryPageVO queryPageVO) {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.like(queryPageVO.getQueryString() != null, "nickname", queryPageVO.getQueryString());
+        Page<UserBackDTO> page = new Page<>();
+        page.setTotal(userDao.selectCount(queryWrapper));
+        page.setRecords(userDao.getAdminUserPage(queryPageVO));
+        return page;
+    }
+
+    @Override
+    public void updateUserDisable(UserDisableVO userDisableVO) {
+        User user = User.builder()
+                .id(userDisableVO.getUid())
+                .status(userDisableVO.getStatus().equals(1))
+                .build();
+        userDao.updateById(user);
     }
 
     /**

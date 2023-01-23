@@ -1,8 +1,12 @@
 package com.sise.blog.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.sise.blog.dto.UserDetailDTO;
+import com.sise.common.dto.UserBackDTO;
 import com.sise.common.pojo.User;
+import com.sise.common.vo.QueryPageVO;
+import com.sise.common.vo.UserDisableVO;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -37,4 +41,17 @@ public interface UserService extends IService<User> {
      * 获取用户列表
      * */
     List<User> getUserList();
+
+    /**
+     * 获取管理员后台用户列表
+     * @param queryPageVO
+     * @return
+     */
+    Page<UserBackDTO> getAdminUser(QueryPageVO queryPageVO);
+
+    /**
+     * 修改用户禁用状态
+     * @param userDisableVO
+     */
+    void updateUserDisable(UserDisableVO userDisableVO);
 }

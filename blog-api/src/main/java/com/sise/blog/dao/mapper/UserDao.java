@@ -1,8 +1,13 @@
 package com.sise.blog.dao.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.sise.common.dto.UserBackDTO;
 import com.sise.common.pojo.User;
+import com.sise.common.vo.QueryPageVO;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * @Description:
@@ -11,4 +16,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface UserDao extends BaseMapper<User> {
+
+    List<UserBackDTO> getAdminUserPage(@Param("queryPageVO") QueryPageVO queryPageVO);
+
 }
