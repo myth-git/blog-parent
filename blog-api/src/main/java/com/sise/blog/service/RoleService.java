@@ -1,7 +1,11 @@
 package com.sise.blog.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.sise.common.dto.RoleDTO;
 import com.sise.common.pojo.admin.Role;
+import com.sise.common.vo.QueryPageVO;
+import com.sise.common.vo.RoleVO;
 import com.sise.common.vo.UserRoleVO;
 
 import java.util.List;
@@ -23,4 +27,19 @@ public interface RoleService extends IService<Role> {
      * @return
      */
     List<Role> listAllRoles();
+
+    /**
+     * 管理员获取后台角色分页数据
+     * @param queryPageVO
+     * @return
+     */
+    Page<RoleDTO> listRole(QueryPageVO queryPageVO);
+
+    void saveOrUpdateRole(RoleVO roleVO);
+
+    /**
+     * 管理员删除角色
+     * @param roleIdList
+     */
+    void deleteRoles(List<Integer> roleIdList);
 }

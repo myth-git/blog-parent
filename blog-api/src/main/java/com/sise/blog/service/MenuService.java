@@ -1,6 +1,7 @@
 package com.sise.blog.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.sise.common.dto.LabelOptionDTO;
 import com.sise.common.dto.UserMenuDTO;
 import com.sise.common.pojo.admin.Menu;
 
@@ -25,4 +26,10 @@ public interface MenuService extends IService<Menu> {
      * @return
      */
     List<UserMenuDTO> listAdminMenus(Long id);
+
+    /**
+     * 角色管理查看角色菜单选项
+     * @return
+     */
+    List<LabelOptionDTO> listMenuOptions();
 }

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--MyBatis配置文件-->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sise.blog.dao.mapper.UserDao">
+
+
+    <select id="getAdminUserPage" parameterType="com.sise.common.vo.QueryPageVO" resultMap="UserBackMap">
+        select u.avatar, u.id, u.username, u.nickname, u.last_ip, u.ip_source, u.create_time, u.status,
+        r.rid, r.role_name, u.last_login_time, u.login_type
+        from blog_user u ,blog_role r ,blog_user_role ur
+        where u.id = ur.uid and r.rid = ur.rid
+        <if test="queryPageVO.queryString != null">
+            and u.nickname like '%${queryPageVO.queryString}%'
+        </if>
+        ORDER BY u.create_time DESC
+        LIMIT ${queryPageVO.pageSize * (queryPageVO.currentPage-1)},#{queryPageVO.pageSize}
+    </select>
+
+    <resultMap id="UserBackMap" type="com.sise.common.dto.UserBackDTO">
+        <id column="id" property="uid"/>
+        <result column="avatar" property="avatar"/>
+        <result column="nickname" property="nickname"/>
+        <result column="last_ip" property="lastIp"/>
+        <result column="ip_source" property="ipSource"/>
+        <result column="create_time" property="createTime"/>
+        <result column="status" property="status"/>
+        <result column="login_type" property="loginType"/>
+        <result column="last_login_time" property="lastLoginTime"/>
+        <collection property="roleList" ofType="com.sise.common.dto.UserRoleDTO">
+            <id column="rid" property="rid"/>
+            <id column="role_name" property="roleName"/>
+        </collection>
+    </resultMap>
+</mapper>

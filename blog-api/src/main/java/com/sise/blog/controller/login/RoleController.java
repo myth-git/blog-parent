@@ -1,7 +1,11 @@
 package com.sise.blog.controller.login;
 
+import com.sise.blog.annotation.OptLog;
 import com.sise.blog.service.RoleService;
+import com.sise.common.constant.OptTypeConst;
 import com.sise.common.entity.Result;
+import com.sise.common.vo.QueryPageVO;
+import com.sise.common.vo.RoleVO;
 import com.sise.common.vo.UserRoleVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -9,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @Description:
@@ -37,4 +42,25 @@ public class RoleController {
         return Result.ok("管理员修改用户角色成功");
     }
 
+    @ApiOperation(value = "管理员获取后台角色分页数据")
+    @GetMapping("/admin/listRoles")
+    public Result listRole(QueryPageVO queryPageVO) {
+        return Result.ok("管理员获取后台角色分页数据成功", roleService.listRole(queryPageVO));
+    }
+
+    @OptLog(optType = OptTypeConst.SAVE_OR_UPDATE)
+    @ApiOperation(value = "管理角色保存或更新角色信息")
+    @PostMapping("/admin/saveOrUpdateRole")
+    public Result saveOrUpdateRole(@RequestBody @Valid RoleVO roleVO) {
+        roleService.saveOrUpdateRole(roleVO);
+        return Result.ok("管理角色保存或更新角色信息成功");
+    }
+
+    @OptLog(optType = OptTypeConst.REMOVE)
+    @ApiOperation(value = "管理员删除角色")
+    @DeleteMapping("/admin")
+    public Result deleteRoles(@RequestBody List<Integer> roleIdList) {
+        roleService.deleteRoles(roleIdList);
+        return Result.ok("管理员删除角色成功");
+    }
 }

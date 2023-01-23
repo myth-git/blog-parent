@@ -1,6 +1,7 @@
 package com.sise.blog.controller.login;
 
 import com.sise.blog.service.ResourceService;
+import com.sise.common.entity.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,5 +44,9 @@ public class ResourceController {
         return resourceService.getUserResource(Long.parseLong(id));
     }
 
-
+    @ApiOperation(value = "角色管理查看角色菜单选项")
+    @GetMapping("/role")
+    public Result listResourceOptions() {
+        return Result.ok("查看角色菜单选项成功", resourceService.listResourceOptions());
+    }
 }

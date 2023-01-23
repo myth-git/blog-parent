@@ -47,4 +47,10 @@ public class MenuController {
         return Result.ok("获取管理员菜单列表成功", menuService.listAdminMenus(user.getId()));
     }
 
+    @ApiOperation(value = "角色管理查看角色菜单选项")
+    @GetMapping("/admin/role")
+    public Result listMenuOptions() {
+        return Result.ok("查看角色菜单选项成功", menuService.listMenuOptions());
+    }
+
 }

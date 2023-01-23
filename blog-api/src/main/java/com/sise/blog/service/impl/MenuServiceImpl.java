@@ -9,6 +9,7 @@ import com.sise.blog.dao.mapper.UserRoleDao;
 import com.sise.blog.service.MenuService;
 import com.sise.blog.utils.BeanCopyUtils;
 import com.sise.common.constant.CommonConst;
+import com.sise.common.dto.LabelOptionDTO;
 import com.sise.common.dto.UserMenuDTO;
 import com.sise.common.pojo.admin.Menu;
 import com.sise.common.pojo.admin.RoleMenu;
@@ -47,6 +48,39 @@ public class MenuServiceImpl extends ServiceImpl<MenuDao, Menu> implements MenuS
         //ADMIN_MENUS表示管理员后台
         return listMenus(id, CommonConst.ADMIN_MENUS);
     }
+
+    @Override
+    public List<LabelOptionDTO> listMenuOptions() {
+        //获取所有菜单列表
+        List<Menu> menuList = menuDao.selectList(new LambdaQueryWrapper<Menu>()
+                .select(Menu::getId, Menu::getName, Menu::getParentId, Menu::getOrderNum));
+        //获取父菜单列表
+        List<Menu> parentList = getCatalogList(menuList);
+        //根据父id获取子菜单列表
+        Map<Integer, List<Menu>> childrenList = getChildrenCatalogList(menuList);
+        List<LabelOptionDTO> collect = parentList.stream().map(item -> {
+            List<LabelOptionDTO> childList = new ArrayList<>();
+            List<Menu> menus = childrenList.get(item.getId());
+            if (CollectionUtils.isNotEmpty(menus)) {
+                childList = menus.stream()
+                        .sorted(Comparator.comparing(Menu::getOrderNum))
+                        .map(t ->
+                                LabelOptionDTO.builder()
+                                        .id(t.getId())
+                                        .label(t.getName())
+                                        .build()).collect(Collectors.toList());
+            }
+            return LabelOptionDTO.builder()
+                    .id(item.getId())
+                    .label(item.getName())
+                    .children(childList)
+                    .build();
+
+        }).collect(Collectors.toList());
+
+        return collect;
+    }
+
 
     private List<UserMenuDTO> listMenus(Long id, Integer type) {
         //根据用户id来获取角色对应id
