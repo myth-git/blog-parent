@@ -91,4 +91,14 @@ public interface ArticlesService extends IService<Articles> {
      * @param blogIdList 博客列表id
      */
     void deleteBlogs(List<Long> blogIdList);
+
+    /**
+     *
+     * @param blogId
+     * @param uid
+     * @return
+     */
+    boolean thumbsUp(Long blogId, Long uid);
+
+    boolean favorite(Long blogId, Long uid);
 }

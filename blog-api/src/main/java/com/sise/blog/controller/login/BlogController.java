@@ -83,4 +83,26 @@ public class BlogController {
         return Result.ok("删除博客成功");
     }
 
+    @ApiOperation(value = "点赞")
+    @GetMapping("/admin/thumbUp/{blogId}/{uid}")
+    public Result thumbsUp(@PathVariable("blogId") Long blogId, @PathVariable("uid") Long uid) {
+        boolean flag = articlesService.thumbsUp(blogId, uid);
+        if (flag){
+            return Result.ok("点赞成功");
+        } else {
+            return Result.fail("取消点赞");
+        }
+    }
+
+    @ApiOperation(value = "收藏")
+    @GetMapping("/admin/favorite/{blogId}/{uid}")
+    public Result favorite(@PathVariable("blogId") Long blogId, @PathVariable("uid") Long uid) {
+        boolean flag = articlesService.favorite(blogId, uid);
+        if (flag) {
+            return Result.ok("收藏成功");
+        } else {
+            return Result.fail("取消收藏");
+        }
+    }
+
 }

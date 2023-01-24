@@ -249,6 +249,46 @@ public class ArticlesServiceImpl extends ServiceImpl<ArticlesDao,Articles> imple
         articlesDao.deleteBatchIds(blogIdList);
     }
 
+    @Override
+    public boolean thumbsUp(Long blogId, Long uid) {
+        LambdaQueryWrapper<ThumbsUp> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(ThumbsUp::getBlogId, blogId)
+                    .eq(ThumbsUp::getUid, uid);
+        Articles articles = articlesDao.selectById(blogId);
+        if (thumbsUpDao.selectCount(queryWrapper) > 0){//说明该文章已点过赞
+            //删除点赞表记录
+            thumbsUpDao.delete(queryWrapper);
+            //该文章点赞数-1
+            articles.setThumbs(articles.getThumbs() - 1);
+            articlesDao.updateById(articles);
+            return false;
+        }
+        ThumbsUp thumbsUp = new ThumbsUp();
+        thumbsUp.setBlogId(blogId);
+        thumbsUp.setUid(uid);
+        thumbsUpDao.insert(thumbsUp);
+        articles.setThumbs(articles.getThumbs() + 1);
+        articlesDao.updateById(articles);
+        return true;
+    }
+
+    @Override
+    public boolean favorite(Long blogId, Long uid) {
+        LambdaQueryWrapper<Favorites> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Favorites::getBlogId, blogId)
+                    .eq(Favorites::getUid, uid);
+        Integer selectCount = favoritesDao.selectCount(queryWrapper);
+        if (selectCount > 0){
+            favoritesDao.delete(queryWrapper);
+            return false;
+        }
+        Favorites favorites = new Favorites();
+        favorites.setBlogId(blogId);
+        favorites.setUid(uid);
+        favoritesDao.insert(favorites);
+        return true;
+    }
+
     private void setBlogViews(Long id) {
         QueryWrapper<Articles> queryWrapper = new QueryWrapper<>();
         queryWrapper.select("views")
