@@ -1,18 +1,20 @@
 package com.sise.blog.controller.login;
 
 import com.sise.blog.annotation.LoginRequired;
+import com.sise.blog.annotation.OptLog;
 import com.sise.blog.service.MenuService;
+import com.sise.common.constant.OptTypeConst;
 import com.sise.common.entity.Result;
 import com.sise.common.pojo.User;
+import com.sise.common.vo.MenuVO;
+import com.sise.common.vo.QueryPageVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 /**
  * @Description: 用户菜单模块
@@ -51,6 +53,28 @@ public class MenuController {
     @GetMapping("/admin/role")
     public Result listMenuOptions() {
         return Result.ok("查看角色菜单选项成功", menuService.listMenuOptions());
+    }
+
+    @GetMapping("/admin/listMenus")
+    @ApiOperation(value = "菜单管理获取后台菜单列表")
+    public Result listMenus(QueryPageVO queryPageVO) {
+        return Result.ok("菜单管理获取后台菜单列表成功", menuService.listMenus(queryPageVO));
+    }
+
+    @OptLog(optType = OptTypeConst.SAVE_OR_UPDATE)
+    @ApiOperation(value = "菜单管理新增或修改菜单")
+    @PostMapping("/admin/saveOrUpdateMenu")
+    public Result saveOrUpdateMenu(@Valid @RequestBody MenuVO menuVO) {
+        menuService.saveOrUpdateMenu(menuVO);
+        return Result.ok("新增或修改菜单成功");
+    }
+
+    @OptLog(optType = OptTypeConst.REMOVE)
+    @ApiOperation(value = "菜单管理删除菜单")
+    @DeleteMapping("/admin/delete/{menuId}")
+    public Result deleteMenu(@PathVariable("menuId") Integer menuId){
+        menuService.deleteMenu(menuId);
+        return Result.ok("删除菜单成功");
     }
 
 }

@@ -2,8 +2,11 @@ package com.sise.blog.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.sise.common.dto.LabelOptionDTO;
+import com.sise.common.dto.MenuDTO;
 import com.sise.common.dto.UserMenuDTO;
 import com.sise.common.pojo.admin.Menu;
+import com.sise.common.vo.MenuVO;
+import com.sise.common.vo.QueryPageVO;
 
 import java.util.List;
 
@@ -32,4 +35,22 @@ public interface MenuService extends IService<Menu> {
      * @return
      */
     List<LabelOptionDTO> listMenuOptions();
+
+    /**
+     * 菜单管理获取后台菜单列表
+     * @return
+     */
+    List<MenuDTO> listMenus(QueryPageVO queryPageVO);
+
+    /**
+     * 菜单管理新增或修改菜单
+     * @param menuVO
+     */
+    void saveOrUpdateMenu(MenuVO menuVO);
+
+    /**
+     * 菜单管理删除菜单
+     * @param menuId
+     */
+    void deleteMenu(Integer menuId);
 }

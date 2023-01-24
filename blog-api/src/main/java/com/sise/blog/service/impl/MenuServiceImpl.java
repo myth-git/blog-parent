@@ -10,10 +10,14 @@ import com.sise.blog.service.MenuService;
 import com.sise.blog.utils.BeanCopyUtils;
 import com.sise.common.constant.CommonConst;
 import com.sise.common.dto.LabelOptionDTO;
+import com.sise.common.dto.MenuDTO;
 import com.sise.common.dto.UserMenuDTO;
+import com.sise.common.exception.BusinessException;
 import com.sise.common.pojo.admin.Menu;
 import com.sise.common.pojo.admin.RoleMenu;
 import com.sise.common.pojo.admin.UserRole;
+import com.sise.common.vo.MenuVO;
+import com.sise.common.vo.QueryPageVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -79,6 +83,54 @@ public class MenuServiceImpl extends ServiceImpl<MenuDao, Menu> implements MenuS
         }).collect(Collectors.toList());
 
         return collect;
+    }
+
+    @Override
+    public List<MenuDTO> listMenus(QueryPageVO queryPageVO) {
+        List<Menu> menuList = menuDao.selectList(new LambdaQueryWrapper<Menu>()
+                .like(queryPageVO.getQueryString() != null, Menu::getName, queryPageVO.getQueryString()));
+        List<Menu> parentList = getCatalogList(menuList);
+        Map<Integer, List<Menu>> childrenList = getChildrenCatalogList(menuList);
+        List<MenuDTO> menuDTOLists = parentList.stream().map(item -> {
+            MenuDTO menuDTO = BeanCopyUtils.copyObject(item, MenuDTO.class);
+            List<MenuDTO> menuDTOList = BeanCopyUtils.copyList(childrenList.get(item.getId()), MenuDTO.class)
+                    .stream().sorted(Comparator.comparing(MenuDTO::getOrderNum)).collect(Collectors.toList());
+            menuDTO.setChildren(menuDTOList);
+            return menuDTO;
+        }).sorted(Comparator.comparing(MenuDTO::getOrderNum)).collect(Collectors.toList());
+        // 若还有菜单未取出则拼接
+//        if (com.baomidou.mybatisplus.core.toolkit.CollectionUtils.isNotEmpty(childrenList)) {
+//            List<Menu> childrenList1 = new ArrayList<>();
+//            childrenList.values().forEach(childrenList1::addAll);
+//            List<MenuDTO> childrenDTOList = childrenList1.stream()
+//                    .map(item -> BeanCopyUtils.copyObject(item, MenuDTO.class))
+//                    .sorted(Comparator.comparing(MenuDTO::getOrderNum))
+//                    .collect(Collectors.toList());
+//            menuDTOLists.addAll(childrenDTOList);
+//        }
+        return menuDTOLists;
+    }
+
+    @Override
+    public void saveOrUpdateMenu(MenuVO menuVO) {
+        Menu menu = BeanCopyUtils.copyObject(menuVO, Menu.class);
+        this.saveOrUpdate(menu);
+    }
+
+    @Override
+    public void deleteMenu(Integer menuId) {
+        Integer selectCount = roleMenuDao.selectCount(new LambdaQueryWrapper<RoleMenu>().eq(RoleMenu::getMenuId, menuId));
+        if (selectCount > 0){
+            throw new BusinessException("菜单与角色有关联，不能删除");
+        }
+        List<Integer> childrenList = menuDao.selectList(new LambdaQueryWrapper<Menu>()
+                .eq(Menu::getParentId, menuId)
+                .select(Menu::getId))
+                .stream()
+                .map(Menu::getId)
+                .collect(Collectors.toList());
+        childrenList.add(menuId);
+        menuDao.deleteBatchIds(childrenList);
     }
 
 
