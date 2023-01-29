@@ -18,14 +18,12 @@ import java.io.Serializable;
 public class ArticlesLabel extends Model<ArticlesLabel> {
     private static final long serialVersionUID = 1L;
 
-    private Long id;
-
     private Long articlesId;
 
     private Long labelId;
 
     @Override
     protected Serializable pkVal() {
-        return this.id;
+        return this.articlesId;
     }
 }

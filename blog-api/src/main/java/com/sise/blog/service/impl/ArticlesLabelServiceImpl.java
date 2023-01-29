@@ -10,6 +10,9 @@ import com.sise.common.vo.ArticlesVO;
 import com.sise.common.vo.QueryPageVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.UUID;
 
 /**
  * @Description:
@@ -20,6 +23,8 @@ import org.springframework.stereotype.Service;
 public class ArticlesLabelServiceImpl extends ServiceImpl<ArticlesLabelDao, ArticlesLabel> implements ArticlesLabelService {
     @Autowired
     private ArticlesLabelDao articlesLabelDao;
+
+    @Transactional(rollbackFor = Exception.class)//要么全部执行成功，要么全部执行失败
     @Override
     public boolean addArticlesLabel(Long id, Integer[] value) {
         ArticlesLabel articlesLabel = new ArticlesLabel();

@@ -21,6 +21,7 @@ import com.sise.common.vo.TypeVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
@@ -100,7 +101,7 @@ public class ArticlesServiceImpl extends ServiceImpl<ArticlesDao,Articles> imple
         page.setRecords(articlesDao.findPersonBlog(queryPageVO, id));
         return page;
     }
-
+    @Transactional(rollbackFor = Exception.class)//要么全部执行成功，要么全部执行失败
     @Override
     public Long addOrUpdate(AddBlogDTO addBlogDTO, Long id) {
         Articles articles = new Articles();
@@ -148,8 +149,8 @@ public class ArticlesServiceImpl extends ServiceImpl<ArticlesDao,Articles> imple
         Articles articles = articlesDao.selectOne(queryWrapper);
         BlogVO blogVO = new BlogVO();
         BeanUtils.copyProperties(articles, blogVO);
-        //获取标签
-        blogVO.setTagNameList(labelDao.getLabelNameList(id).stream().map(Label::getLabelName).collect(Collectors.toList()));
+        //获取标签id,不能直接获取名称，否则更新时标签类型会不一致
+        blogVO.setTagNameIds(labelDao.getLabelNameList(id).stream().map(Label::getId).collect(Collectors.toList()));
         String content = articles.getContent();
         if (content != null) {
             blogVO.setContent(MarkdownUtils.markdownToHtmlExtensions(content));

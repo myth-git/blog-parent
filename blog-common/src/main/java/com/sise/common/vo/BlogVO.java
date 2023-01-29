@@ -21,4 +21,8 @@ public class BlogVO extends Articles implements Serializable {
      * 文章标签
      */
     private List<String> tagNameList;
+    /**
+     * 文章标签id
+     */
+    private List<Integer> tagNameIds;
 }
