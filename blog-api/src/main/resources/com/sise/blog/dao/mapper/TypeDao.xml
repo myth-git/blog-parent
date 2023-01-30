@@ -8,6 +8,7 @@
         select distinct t.id,t.type_name,count(a.type_id) as typeCount
         from blog_type t
         left join blog_articles a on t.id = a.type_id
+        where a.published = 0
         group by t.id
         order by count(a.type_id) desc
     </select>

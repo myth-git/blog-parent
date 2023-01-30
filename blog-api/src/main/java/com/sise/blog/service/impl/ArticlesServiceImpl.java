@@ -74,7 +74,7 @@ public class ArticlesServiceImpl extends ServiceImpl<ArticlesDao,Articles> imple
     public Page<ArticlesVO> findHomePage(QueryPageVO queryPageVO) {
         Page<ArticlesVO> page = new Page<>(queryPageVO.getCurrentPage(), queryPageVO.getPageSize());
         QueryWrapper<Articles> queryWrapper = new QueryWrapper<>();
-        queryWrapper.like(queryPageVO.getQueryString() != null, "content", queryPageVO.getQueryString());
+        queryWrapper.eq("published",0).like(queryPageVO.getQueryString() != null, "content", queryPageVO.getQueryString());
         page.setTotal(articlesDao.selectCount(queryWrapper));
         page.setRecords(articlesDao.findHomePage(queryPageVO));
         return page;
@@ -84,6 +84,7 @@ public class ArticlesServiceImpl extends ServiceImpl<ArticlesDao,Articles> imple
     public List<Articles> latestList() {
         QueryWrapper<Articles> queryWrapper = new QueryWrapper<>();
         queryWrapper.select("id","title","create_time")
+                    .eq("published",0)
                     .last("limit 0,6")
                     .orderByDesc("create_time");
         List<Articles> articles = articlesDao.selectList(queryWrapper);
@@ -120,6 +121,21 @@ public class ArticlesServiceImpl extends ServiceImpl<ArticlesDao,Articles> imple
         this.saveOrUpdate(articles);
         //插入中间表
         articlesLabelService.addArticlesLabel(articles.getId(),addBlogDTO.getValue());
+        return articles.getId();
+    }
+
+    @Transactional(rollbackFor = Exception.class)//要么全部执行成功，要么全部执行失败
+    @Override
+    public Long addDraft(AddBlogDTO addBlogDTO, Long id) {
+        Articles articles = new Articles();
+        BeanUtils.copyProperties(addBlogDTO, articles);
+        articles.setUserId(id);
+        articles.setPublished(true);//表示保存为草稿状态
+        articles.setId(IdWorker.getId());//获取文章id
+        articles.setFirstPicture(isImagesTrue(articles.getFirstPicture()));
+        articles.setUpdateTime(LocalDateTime.now());
+        this.save(articles);
+        articlesLabelService.addArticlesLabel(articles.getId(), addBlogDTO.getValue());//保存文章和标签关联表
         return articles.getId();
     }
 
@@ -193,7 +209,9 @@ public class ArticlesServiceImpl extends ServiceImpl<ArticlesDao,Articles> imple
         // 查询用户量
         Integer userCount = userDao.selectCount(null);
         // 查询文章量
-        Integer blogCount = articlesDao.selectCount(null);
+        QueryWrapper<Articles> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("published", 0);//排除草稿文章
+        Integer blogCount = articlesDao.selectCount(queryWrapper);
         // 查询一周访问量
         List<ViewsDTO> viewsDTOList = viewsService.getViewsData();
         // 查询文章统计

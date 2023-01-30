@@ -101,4 +101,12 @@ public interface ArticlesService extends IService<Articles> {
     boolean thumbsUp(Long blogId, Long uid);
 
     boolean favorite(Long blogId, Long uid);
+
+    /**
+     * 用户保存博客为草稿
+     * @param addBlogDTO
+     * @param id
+     * @return
+     */
+    Long addDraft(AddBlogDTO addBlogDTO, Long id);
 }

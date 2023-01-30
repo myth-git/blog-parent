@@ -49,6 +49,15 @@ public class BlogController {
         return Result.ok("用户添加或更新博客成功");
     }
 
+    @LoginRequired
+    @ApiOperation(value = "用户保存博客为草稿")
+    @PostMapping("/admin/addDraft")
+    public Result addDraft(@RequestBody AddBlogDTO addBlogDTO, HttpServletRequest request) {
+        User user = (User) request.getAttribute("currentUser");
+        Long blogId = articlesService.addDraft(addBlogDTO, user.getId());
+        return Result.ok("用户保存博客为草稿成功");
+    }
+
     @ApiOperation(value = "首页获取根据id博客信息")
     @GetMapping("/{id}")
     public Result getBlogDetail(@PathVariable("id") Long id) {

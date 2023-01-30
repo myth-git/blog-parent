@@ -9,6 +9,8 @@
         select distinct l.id,l.label_name,count(al.label_id) as labelCount
         from blog_label l
         left join blog_articles_label al on l.id = al.label_id
+        left join blog_articles a on a.id = al.articles_id
+        where a.published = 0
         group by l.id
         order by count(al.label_id) desc
     </select>
