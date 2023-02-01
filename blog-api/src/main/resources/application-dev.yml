@@ -6,6 +6,11 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   redis:
     host: 127.0.0.1
+  mail:
+    password: bcdxmavvexjpfbbc
+    username: 1610680426@qq.com
+    host: smtp.qq.com
+
 
 
 eureka:

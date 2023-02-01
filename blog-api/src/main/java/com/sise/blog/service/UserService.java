@@ -3,6 +3,7 @@ package com.sise.blog.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.sise.blog.dto.UserDetailDTO;
+import com.sise.common.dto.ResetPasswordDTO;
 import com.sise.common.dto.UserBackDTO;
 import com.sise.common.pojo.User;
 import com.sise.common.vo.QueryPageVO;
@@ -54,4 +55,10 @@ public interface UserService extends IService<User> {
      * @param userDisableVO
      */
     void updateUserDisable(UserDisableVO userDisableVO);
+
+    /**
+     * 用户找回密码
+     * @param resetPasswordDTO
+     */
+    void resetPassword(ResetPasswordDTO resetPasswordDTO);
 }

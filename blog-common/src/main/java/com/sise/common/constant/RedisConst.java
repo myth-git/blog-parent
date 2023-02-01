@@ -9,7 +9,7 @@ public class RedisConst {
     /**
      * 验证码过期时间
      */
-    public static final long CODE_EXPIRE_TIME = 30 * 60;
+    public static final long CODE_EXPIRE_TIME = 10 * 60;
 
     /**
      * 用户地区分布更新时间
@@ -20,6 +20,11 @@ public class RedisConst {
      * 验证码
      */
     public static final String USER_CODE_KEY = "code:";
+
+    /**
+     * 邮箱验证码
+     */
+    public static final String EMAIL_CODE_KEY = "email_code:";
 
     /**
      * 用户权限列表

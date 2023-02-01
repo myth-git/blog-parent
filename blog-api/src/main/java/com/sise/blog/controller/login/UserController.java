@@ -1,10 +1,15 @@
 package com.sise.blog.controller.login;
 
+import com.baomidou.mybatisplus.extension.api.R;
 import com.sise.blog.annotation.OptLog;
+import com.sise.blog.service.MsmService;
 import com.sise.blog.service.RoleService;
 import com.sise.blog.service.UserService;
+import com.sise.blog.utils.RedisUtil;
 import com.sise.common.constant.OptTypeConst;
+import com.sise.common.dto.ResetPasswordDTO;
 import com.sise.common.entity.Result;
+import com.sise.common.qq.RandomUtil;
 import com.sise.common.vo.QueryPageVO;
 import com.sise.common.vo.UserDisableVO;
 import com.sise.common.vo.UserRoleVO;
@@ -14,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Random;
 
 /**
  * @Description: 后台用户信息模块
@@ -28,6 +34,10 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private MsmService msmService;
+    @Autowired
+    private RedisUtil redisUtil;
 
     @ApiOperation(value = "获取用户列表", notes = "获取用户列表")
     @GetMapping("/getUserList")
@@ -47,6 +57,20 @@ public class UserController {
     public Result updateUserDisable(@Valid @RequestBody UserDisableVO userDisableVO) {
         userService.updateUserDisable(userDisableVO);
         return Result.ok("修改用户禁用状态成功");
+    }
+
+    //发送邮箱验证码
+    @GetMapping("/code")
+    public Result sendEmailCode(String email) {
+        msmService.sendEmail(email);
+        return Result.ok("获取验证码成功");
+    }
+
+    @ApiOperation(value = "用户找回密码", notes = "用户找回密码")
+    @PutMapping("/resetPassword")
+    public Result resetPassword(@RequestBody ResetPasswordDTO resetPasswordDTO) {
+        userService.resetPassword(resetPasswordDTO);
+        return Result.ok("找回密码成功");
     }
 
 

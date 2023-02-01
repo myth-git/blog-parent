@@ -14,7 +14,9 @@ import com.sise.blog.utils.IpUtil;
 import com.sise.blog.utils.RedisUtil;
 import com.sise.common.constant.MessageConstant;
 import com.sise.common.constant.RedisConst;
+import com.sise.common.dto.ResetPasswordDTO;
 import com.sise.common.dto.UserBackDTO;
+import com.sise.common.exception.BusinessException;
 import com.sise.common.pojo.User;
 import com.sise.common.pojo.admin.UserRole;
 import com.sise.common.vo.QueryPageVO;
@@ -135,7 +137,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
     public User findById(long userId) {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id", userId);
-        if (userDao.selectOne(queryWrapper) == null){
+        if (userDao.selectOne(queryWrapper) == null) {
             return null;
         }
         return userDao.selectOne(queryWrapper);
@@ -145,7 +147,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
     public List<User> getUserList() {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.select("id", "username", "nickname", "avatar")
-                    .orderByAsc("create_time");
+                .orderByAsc("create_time");
         return userDao.selectList(queryWrapper);
     }
 
@@ -166,6 +168,29 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
                 .status(userDisableVO.getStatus().equals(1))
                 .build();
         userDao.updateById(user);
+    }
+
+    @Override
+    public void resetPassword(ResetPasswordDTO resetPasswordDTO) {
+        User user = userDao.selectOne(new LambdaQueryWrapper<User>()
+                .select(User::getId, User::getEmail)
+                .eq(User::getUsername, resetPasswordDTO.getUsername()));
+        if (user == null) {
+            throw new BusinessException("该用户不存在，请重新确认");
+        }
+        if (!user.getEmail().equals(resetPasswordDTO.getEmail())) {
+            throw new BusinessException("该账号对应的邮箱不匹配，请重新确认");
+        }
+        String emailCode = (String) redisUtil.get(RedisConst.EMAIL_CODE_KEY + resetPasswordDTO.getEmail());
+        if (!emailCode.equals(resetPasswordDTO.getCode())) {
+            throw new BusinessException("验证码输入错误，请重新输入");
+        }
+        User userVO = new User();
+        userVO.setId(user.getId());
+        userVO.setStatus(MessageConstant.USER_ABLE);
+        userVO.setPassword(encoder.encode(resetPasswordDTO.getPassword()));
+        userVO.setUpdateTime(LocalDateTime.now());
+        userDao.updateById(userVO);
     }
 
     /**
