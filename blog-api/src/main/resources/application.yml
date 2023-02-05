@@ -9,8 +9,14 @@ spring:
   application:
     name: blog-server #ָ服务名
 
+  rabbitmq:
+    username: guest
+    password: guest
+    host: localhost
+    port: 5672
+
+
 myth:
   es:
     hostlist: 127.0.0.1:9200 #多个节点用逗号隔开
-
 

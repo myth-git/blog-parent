@@ -1,6 +1,11 @@
 package com.sise.blog.service.impl;
 
+import com.sise.blog.dao.mapper.ArticlesDao;
+import com.sise.blog.es.index.BlogInfo;
+import com.sise.blog.es.mq.PostMqIndexMessage;
 import com.sise.blog.service.BlogInfoService;
+import com.sise.blog.utils.BeanCopyUtils;
+import com.sise.common.pojo.Articles;
 import com.sise.common.vo.PageLightVO;
 import com.sise.common.vo.QueryPageVO;
 import org.elasticsearch.action.search.SearchRequest;
@@ -16,7 +21,9 @@ import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -35,6 +42,10 @@ public class BlogInfoServiceImpl implements BlogInfoService {
 
     @Autowired
     private RestHighLevelClient restHighLevelClient;
+    @Autowired
+    private ArticlesDao articlesDao;
+    @Autowired
+    private ElasticsearchOperations elasticsearchOperations;
 
     @Override
     public PageLightVO highLightSearchPage(QueryPageVO queryPageVO) throws IOException {
@@ -83,6 +94,14 @@ public class BlogInfoServiceImpl implements BlogInfoService {
         pageLightVO.setRecords(list);
         return pageLightVO;
 
+    }
+
+    @Override
+    public void createOrUpdate(PostMqIndexMessage message) {
+        Long blogId = message.getBlogId();
+        Articles articles = articlesDao.selectById(blogId);
+        BlogInfo blogInfo = BeanCopyUtils.copyObject(articles, BlogInfo.class);
+        elasticsearchOperations.save(blogInfo);
     }
 
     /**

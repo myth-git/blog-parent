@@ -227,6 +227,11 @@
             <artifactId>lucene-core</artifactId>
             <version>8.4.0</version>
         </dependency>
+        <!--mq-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
+        </dependency>
 
     </dependencies>
 

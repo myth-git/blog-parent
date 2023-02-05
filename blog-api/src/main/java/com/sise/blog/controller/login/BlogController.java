@@ -2,15 +2,19 @@ package com.sise.blog.controller.login;
 
 import com.sise.blog.annotation.LoginRequired;
 import com.sise.blog.annotation.OptLog;
+import com.sise.blog.es.mq.PostMqIndexMessage;
 import com.sise.blog.service.ArticlesService;
 import com.sise.common.constant.OptTypeConst;
+import com.sise.common.constant.RabbitMQConst;
 import com.sise.common.dto.AddBlogDTO;
 import com.sise.common.entity.Result;
 import com.sise.common.pojo.User;
 import com.sise.common.vo.QueryPageVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,7 +32,8 @@ public class BlogController {
 
     @Autowired
     private ArticlesService articlesService;
-
+    @Autowired
+    private AmqpTemplate amqpTemplate;
 
 
     @LoginRequired
@@ -42,10 +47,15 @@ public class BlogController {
     @LoginRequired
     @ApiOperation(value = "用户添加或更新博客")
     @PostMapping("/admin/addOrUpdate")
+    @Transactional(rollbackFor = Exception.class)//要么全部执行成功，要么全部执行失败
     public Result addOrUpdate(@RequestBody AddBlogDTO addBlogDTO, HttpServletRequest request) {
         //获取登录后的用户信息
         User user = (User) request.getAttribute("currentUser");
         Long blogId = articlesService.addOrUpdate(addBlogDTO, user.getId());
+        System.out.println("测试es" + blogId);
+        //生产者发消息给mq，然后进行es同步
+        amqpTemplate.convertAndSend(RabbitMQConst.esExchange, RabbitMQConst.esBingKey,
+                new PostMqIndexMessage(blogId, PostMqIndexMessage.CREATE_OR_UPDATE));
         return Result.ok("用户添加或更新博客成功");
     }
 
@@ -89,6 +99,12 @@ public class BlogController {
     @DeleteMapping("/admin/delete")
     public Result deleteBlogs(@RequestBody List<Long> blogIdList) {
         articlesService.deleteBlogs(blogIdList);
+//        PostMqIndexMessage postMqIndexMessage = new PostMqIndexMessage();
+//        postMqIndexMessage.setBlogIdList(blogIdList).setType(PostMqIndexMessage.REMOVE);
+//        amqpTemplate.convertAndSend(RabbitMQConst.esExchange, RabbitMQConst.esBingKey,
+//                postMqIndexMessage);
+        amqpTemplate.convertAndSend(RabbitMQConst.esExchange, RabbitMQConst.esBingKey,
+                new PostMqIndexMessage(blogIdList, PostMqIndexMessage.REMOVE));
         return Result.ok("删除博客成功");
     }
 
