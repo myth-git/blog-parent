@@ -7,6 +7,10 @@ spring:
   profiles:
     active: dev
   application:
-    name: blog-server #ָ��������
+    name: blog-server #ָ服务名
+
+myth:
+  es:
+    hostlist: 127.0.0.1:9200 #多个节点用逗号隔开
 
 

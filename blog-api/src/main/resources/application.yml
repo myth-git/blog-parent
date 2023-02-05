@@ -7,6 +7,10 @@ spring:
   profiles:
     active: dev
   application:
-    name: blog-server #Ö¸¶¨·şÎñÃû
+    name: blog-server #Ö¸æœåŠ¡å
+
+myth:
+  es:
+    hostlist: 127.0.0.1:9200 #å¤šä¸ªèŠ‚ç‚¹ç”¨é€—å·éš”å¼€
 
 

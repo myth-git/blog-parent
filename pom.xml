@@ -32,6 +32,7 @@
         <swagger.version>1.5.22</swagger.version>
         <mybatisplus-spring-boot-starter.version>1.0.5</mybatisplus-spring-boot-starter.version>
         <mybatisplus.version>2.2.0</mybatisplus.version>
+        <elasticsearch.version>7.6.1</elasticsearch.version>
     </properties>
 
     <dependencies>
