@@ -8,6 +8,7 @@ import com.sise.blog.service.UserService;
 import com.sise.blog.utils.RedisUtil;
 import com.sise.common.constant.OptTypeConst;
 import com.sise.common.dto.ResetPasswordDTO;
+import com.sise.common.dto.UpdateUserDTO;
 import com.sise.common.entity.Result;
 import com.sise.common.qq.RandomUtil;
 import com.sise.common.vo.QueryPageVO;
@@ -59,7 +60,8 @@ public class UserController {
         return Result.ok("修改用户禁用状态成功");
     }
 
-    //发送邮箱验证码
+
+    @ApiOperation(value = "发送邮箱验证码", notes = "发送邮箱验证码")
     @GetMapping("/code")
     public Result sendEmailCode(String email) {
         msmService.sendEmail(email);
@@ -71,6 +73,17 @@ public class UserController {
     public Result resetPassword(@RequestBody ResetPasswordDTO resetPasswordDTO) {
         userService.resetPassword(resetPasswordDTO);
         return Result.ok("找回密码成功");
+    }
+
+    @ApiOperation(value = "用户更新个人信息", notes = "用户更新个人信息")
+    @PutMapping("/admin/updateUser")
+    public Result updateUser(@RequestBody UpdateUserDTO updateUserDTO) {
+        boolean flag = userService.updateUser(updateUserDTO);
+        if (flag){
+            return Result.ok("用户更新个人信息成功");
+        } else {
+            return Result.fail("该用户名称已存在");
+        }
     }
 
 

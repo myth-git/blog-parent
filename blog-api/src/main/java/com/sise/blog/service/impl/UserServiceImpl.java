@@ -10,11 +10,13 @@ import com.sise.blog.dao.mapper.UserDao;
 import com.sise.blog.dao.mapper.UserRoleDao;
 import com.sise.blog.dto.UserDetailDTO;
 import com.sise.blog.service.UserService;
+import com.sise.blog.utils.BeanCopyUtils;
 import com.sise.blog.utils.IpUtil;
 import com.sise.blog.utils.RedisUtil;
 import com.sise.common.constant.MessageConstant;
 import com.sise.common.constant.RedisConst;
 import com.sise.common.dto.ResetPasswordDTO;
+import com.sise.common.dto.UpdateUserDTO;
 import com.sise.common.dto.UserBackDTO;
 import com.sise.common.exception.BusinessException;
 import com.sise.common.pojo.User;
@@ -191,6 +193,36 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
         userVO.setPassword(encoder.encode(resetPasswordDTO.getPassword()));
         userVO.setUpdateTime(LocalDateTime.now());
         userDao.updateById(userVO);
+    }
+
+    @Override
+    public boolean updateUser(UpdateUserDTO updateUserDTO) {
+        //缓存获取邮箱发的验证码
+        String realCode = (String) redisUtil.get(RedisConst.EMAIL_CODE_KEY + updateUserDTO.getEmail());
+        if (!realCode.equals(updateUserDTO.getCode())) {
+            throw new BusinessException("请输入正确的验证码");
+        }
+        User user = userDao.selectById(updateUserDTO.getId());
+
+        if (userService.existUser(updateUserDTO.getUsername()) && !user.getUsername().equals(updateUserDTO.getUsername())){
+            return false;
+        }
+
+        if (updateUserDTO.getPassword() != null && !updateUserDTO.getPassword().equals("")) {
+            updateUserDTO.setPassword(encoder.encode(updateUserDTO.getPassword()));
+        } else {
+            updateUserDTO.setPassword(null);
+        }
+
+        BeanCopyUtils.copyPropertiesIgnoreNull(updateUserDTO, user);
+        user.setUpdateTime(LocalDateTime.now());
+        user.setStatus(MessageConstant.USER_ABLE);
+        user.setAvatar(isImagesTrue(updateUserDTO.getAvatar()));
+        user.setLoginType(updateUserDTO.getLoginType());
+
+        userDao.updateById(user);
+//        redisUtil.del(RedisConst.EMAIL_CODE_KEY + updateUserDTO.getEmail());
+        return true;
     }
 
     /**
