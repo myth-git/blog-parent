@@ -14,10 +14,13 @@ import com.sise.common.constant.CommonConst;
 import com.sise.common.constant.RedisConst;
 import com.sise.common.dto.*;
 import com.sise.common.pojo.*;
+import com.sise.common.utils.TimeUtils;
 import com.sise.common.vo.ArticlesVO;
 import com.sise.common.vo.BlogVO;
 import com.sise.common.vo.QueryPageVO;
 import com.sise.common.vo.TypeVO;
+
+import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,7 +30,9 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -154,6 +159,36 @@ public class ArticlesServiceImpl extends ServiceImpl<ArticlesDao,Articles> imple
         String content = articles.getContent();
         if (content != null) {
             blogVO.setContent(MarkdownUtils.markdownToHtmlExtensions(content));
+        }
+        //增加文章浏览量
+        List<Views> viewsList = viewsDao.selectList(
+                new LambdaQueryWrapper<Views>()
+                .eq(Views::getBlogId, id)
+                .orderByDesc(Views::getCreateTime));//倒序获取集合，目的方便后面添加数据
+        System.out.println("集合：" + viewsList);
+        if (!viewsList.isEmpty()) {
+            for (Views views : viewsList) {
+                boolean sameDate = TimeUtils.isSameDate(views.getCreateTime(), LocalDateTime.now());
+                if (sameDate) {
+                    views.setCount(views.getCount() + 1);
+                    viewsDao.updateById(views);
+                } else {
+                    Views views1 = new Views();
+                    views1.setCreateTime(LocalDateTime.now());
+                    views1.setBlogId(id);
+                    views1.setCount(0);
+                    views1.setCount(views1.getCount() + 1);
+                    viewsDao.insert(views1);
+                }
+                break; //跳出循环
+            }
+        } else {
+            Views views = new Views();
+            views.setBlogId(id);
+            views.setCreateTime(LocalDateTime.now());
+            views.setCount(0);
+            views.setCount(views.getCount() + 1);
+            viewsDao.insert(views);
         }
         return blogVO;
     }
