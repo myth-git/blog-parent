@@ -7,6 +7,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,7 +26,7 @@ public class RegisterUserController {
 
     @PostMapping("/add")
     @ApiOperation(value = "用户注册", notes = "用户注册")
-    public Result register(User user) {
+    public Result register(@RequestBody User user) {
         if (userService.add(user)){
             return Result.ok("注册成功");
         } else {
