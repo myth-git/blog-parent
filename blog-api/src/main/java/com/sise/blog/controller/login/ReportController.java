@@ -29,6 +29,15 @@ public class ReportController {
     private ReportService reportService;
 
     @LoginRequired
+    @GetMapping("/admin/getReport1")
+    @ApiOperation(value = "获取用户后台博文数据")
+    public Result getReport1(HttpServletRequest request) throws Exception {
+        User user = (User) request.getAttribute("currentUser");
+        return Result.ok("获取数据统计成功", reportService.getReport1(user.getId()));
+    }
+
+
+    @LoginRequired
     @GetMapping("/admin/getReport2")
     @ApiOperation(value = "获取单篇博文数据")
     public Result getReport2(HttpServletRequest request) throws Exception {
