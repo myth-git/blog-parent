@@ -232,7 +232,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
      * @return url
      */
     public String isImagesTrue(String postUrl) {
-        if (postUrl.contains("tcefrep.oss-cn-beijing.aliyuncs.com")) { //本人的oss地址，就无需检验图片有效性
+        if (postUrl.contains("blog-myth.oss-cn-guangzhou.aliyuncs.com")) { //本人的oss地址，就无需检验图片有效性
             return postUrl;
         }
         int max = 1000;

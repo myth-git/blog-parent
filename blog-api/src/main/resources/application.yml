@@ -20,3 +20,10 @@ myth:
   es:
     hostlist: 127.0.0.1:9200 #多个节点用逗号隔开
 
+aliyun:
+  oss:
+    file:
+      endpoint: oss-cn-guangzhou.aliyuncs.com
+      keyid: LTAI5tSAEumpRXh4NUEPLDbU
+      keysecret: oDG6bMThg2oy9Ibbk0kiOjPPszdYeo
+      bucketname: blog-myth
