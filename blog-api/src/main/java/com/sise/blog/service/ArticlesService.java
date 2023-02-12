@@ -109,4 +109,10 @@ public interface ArticlesService extends IService<Articles> {
      * @return
      */
     Long addDraft(AddBlogDTO addBlogDTO, Long id);
+
+    /**
+     * 最热文章查询
+     * @return
+     */
+    List<Articles> hotList();
 }

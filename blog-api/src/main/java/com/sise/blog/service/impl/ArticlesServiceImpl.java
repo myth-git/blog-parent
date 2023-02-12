@@ -97,6 +97,17 @@ public class ArticlesServiceImpl extends ServiceImpl<ArticlesDao,Articles> imple
     }
 
     @Override
+    public List<Articles> hotList() {
+        QueryWrapper<Articles> queryWrapper = new QueryWrapper<>();
+        queryWrapper.select("id","title","create_time","views")
+                    .eq("published", 0)
+                    .last("limit 0,5")
+                    .orderByDesc("views");
+        List<Articles> articlesList = articlesDao.selectList(queryWrapper);
+        return articlesList;
+    }
+
+    @Override
     public Page<ArticlesVO> findPersonBlog(QueryPageVO queryPageVO, Long id) {
 
         Page<ArticlesVO> page = new Page<>(queryPageVO.getCurrentPage(), queryPageVO.getPageSize());

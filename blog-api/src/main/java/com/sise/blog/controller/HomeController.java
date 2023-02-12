@@ -50,4 +50,10 @@ public class HomeController {
     public Result latestList() {
         return Result.ok("查询最新文章推荐成功", articlesService.latestList());
     }
+
+    @ApiOperation(value = "最热文章查询", notes = "返回文章数据")
+    @GetMapping("/hotList")
+    public Result hotList() {
+        return Result.ok("查询最热文章成功", articlesService.hotList());
+    }
 }
